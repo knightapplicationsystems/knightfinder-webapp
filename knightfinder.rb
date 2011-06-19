@@ -1,4 +1,5 @@
 #foo.rb
+require "bundler/setup"
 require 'sinatra/base'
 
 class KnightFinder < Sinatra::Base

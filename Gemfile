@@ -1,4 +1,3 @@
-source :rubygems
-source :gemcutter
+source "http://rubygems.org"
 
-gem 'sinatra', '1.3.7'
+gem 'sinatra', '~>1.2.6'
