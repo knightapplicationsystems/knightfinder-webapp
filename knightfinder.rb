@@ -1,9 +1,37 @@
-#foo.rb
+#knightfinder.rb
 require 'sinatra/base'
 require 'bundler/setup'
 require 'sinatra/activerecord'
+require 'json'
+require 'geokit'
+
+class Venue < ActiveRecord::Base
+  validates_presence_of :name
+  has_many :deals
+  has_many :visits
+  
+  def ll
+    "#{self.longditude},#{self.lattitude}"
+  end
+end
+
+class Deal < ActiveRecord::Base
+  belongs_to :venue
+end
+
+class Visit < ActiveRecord::Base
+  belongs_to :venue
+end
+
+
+
+
 
 class KnightFinder < Sinatra::Base
+  
+  configure do
+    Geokit::Geocoders::google = 'ABQIAAAA3u5SpqaF2DYRIsPQ7SUS7hTtwS2snXC5p7JJaiv_N14kY4e6ixTzc_jYNIKYYCenoUoNg0PNmLBWvg'
+  end
   
   #------ Generic Web Interface ------
 
@@ -13,6 +41,7 @@ class KnightFinder < Sinatra::Base
 
   get "/login" do
     "Login Page"
+    request.inspect
   end
 
   post "/login" do
@@ -60,36 +89,56 @@ class KnightFinder < Sinatra::Base
 
   #------ API ------
 
-  get "/api/venues/:query" do
-    #match against RegExp for LongLat
-    #Return 200 with JSON for all venues within 50 miles: {venues : {...}}
-    #Or Return 404
+  # Expects "/api/venues?q=City" or "/api/venues?loc=45.6456677,0.567765". Will fail on anything else.
+  get "/api/venues" do
+    if params[:loc]
+      "Finding by LonLat: #{params[:loc]}"
+      #Calculate all venues within 50 miles.
+      #Return 200 with JSON for all venues within 50 miles.
+    elsif params[:q]
+      "Finding by Query: #{params[:q]}"
+      #Check for cities
+      #Return JSON:   {cities : { Brighton, {...}}, { Brighteelm, {...}}}
+      #               {venues : {...}}
+      #Or return 404
+    else
+      status 400
+    end 
   end
 
-  get "/api/venues/:query" do
-    #Return JSON:   {cities : { Brighton, {...}}, { Brighteelm, {...}}}
-    #               {venues : {...}}
-    #Or return 404
-  end
-
+  # Returns deals for the given venue as JSON.
   get "/api/venue/:id/deals" do
-    #Return JSON:   {..., Deals : {...}}
-    #Or return 404
+    @deals = Venue.find(params[:id]).deals.where(:active => true)
+    if @deals.count < 1
+      status 404
+      "No Deals Found"
+    else
+      status 200
+      content_type :json
+      @deals.to_json
+    end
   end
 
+  # Expects "longditude", "lattitude" and "city" as POSTDATA.
   post "/api/venue/:id" do
-    #Perform CREATE on Visits
-    #Post Data must contain Remote IP, UA, City last Searched, Current Long/Lat
-    #Return 201
+    @venue = Venue.find(params[:id])
+    @venue.visits.new(  :request_uri  => request.env["REQUEST_URI"],
+                        :remote_ip    => request.env["REMOTE_ADDR"],
+                        :user_agent   => request.env["HTTP_USER_AGENT"],
+                        :longditude   => params[:longditude],
+                        :lattitude    => params[:lattitude],
+                        :city         => params[:city])
+    status 201
   end
 
   #------- NOT USED YET --------
   
   #These routes & methods are included to maintain CRUD completeness.
   
-  get "api/venue/:id" do
-    #Return JSON {...} with 200
-    #Or Return 404
+  get "/api/venue/:id" do
+    status 200
+    content_type :json
+    Venue.find(params[:id]).to_json
   end
 
 end
