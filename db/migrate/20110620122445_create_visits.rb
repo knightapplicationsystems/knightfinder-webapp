@@ -9,7 +9,6 @@ class CreateVisits < ActiveRecord::Migration
       t.string  :city
       t.string  :longditude
       t.string  :lattitude
-      t.boolean :active, :default => false
       
       t.timestamps
     end

@@ -10,6 +10,14 @@ class Venue < ActiveRecord::Base
   has_many :deals
   has_many :visits
   
+  def self.active
+    self.where(:active => true)
+  end
+  
+  def active_deals
+    self.deals.active
+  end
+  
   def ll
     "#{self.longditude},#{self.lattitude}"
   end
@@ -17,6 +25,10 @@ end
 
 class Deal < ActiveRecord::Base
   belongs_to :venue
+  
+  def self.active
+    self.where(:active => true)
+  end
 end
 
 class Visit < ActiveRecord::Base
@@ -88,27 +100,46 @@ class KnightFinder < Sinatra::Base
 
 
   #------ API ------
-
-  # Expects "/api/venues?q=City" or "/api/venues?loc=45.6456677,0.567765". Will fail on anything else.
+  
+  # Expects "/api/venues?q=City" or "/api/venues?loc=45.6456677,0.567765". Will fail with 400 on anything else.
   get "/api/venues" do
     if params[:loc]
-      "Finding by LonLat: #{params[:loc]}"
-      #Calculate all venues within 50 miles.
-      #Return 200 with JSON for all venues within 50 miles.
+      
+      # If the query is a location...
+      "Finding by LonLat: #{params[:loc].split('?')[0]}"
+      # Calculate all venues within 50 miles.
+      # Return 200 with JSON for all venues within 50 miles.
+      
     elsif params[:q]
-      "Finding by Query: #{params[:q]}"
-      #Check for cities
-      #Return JSON:   {cities : { Brighton, {...}}, { Brighteelm, {...}}}
-      #               {venues : {...}}
-      #Or return 404
+      
+      # If the query is a search term, Find venues matching it by city or name, and group the city results by city.
+      venues_by_city = Venue.where("city lIKE ?", "%#{params[:q]}%").group_by {|e| e.city }
+      venues_by_name = Venue.where("name LIKE ?", "%#{params[:q]}%")
+      
+      # Set up the return hash.
+      @result = {:city_results => venues_by_city,
+                 :name_results => venues_by_name}
+      
+      # Return it as JSON only if it's not empty. Otherwise return a 404.
+      if (venues_by_city.count > 0 || venues_by_name.count > 0)
+        content_type :json
+        @result.to_json
+      else
+        status 404
+        "No Records Found"
+      end
+      
     else
       status 400
+      "Bad Request"
     end 
   end
 
   # Returns deals for the given venue as JSON.
   get "/api/venue/:id/deals" do
-    @deals = Venue.find(params[:id]).deals.where(:active => true)
+    
+    @deals = Venue.find(params[:id]).active_deals
+    
     if @deals.count < 1
       status 404
       "No Deals Found"
@@ -120,21 +151,27 @@ class KnightFinder < Sinatra::Base
   end
 
   # Expects "longditude", "lattitude" and "city" as POSTDATA.
-  post "/api/venue/:id" do
+  post "/api/venue/:id/log" do
+    
     @venue = Venue.find(params[:id])
-    @venue.visits.new(  :request_uri  => request.env["REQUEST_URI"],
+    @visit = @venue.visits.new(  :request_uri  => request.env["REQUEST_URI"],
                         :remote_ip    => request.env["REMOTE_ADDR"],
                         :user_agent   => request.env["HTTP_USER_AGENT"],
                         :longditude   => params[:longditude],
                         :lattitude    => params[:lattitude],
                         :city         => params[:city])
-    status 201
+                        
+    if @visit.save!
+      status 201
+    else
+      status 500
+    end
+    
   end
 
   #------- NOT USED YET --------
   
   #These routes & methods are included to maintain CRUD completeness.
-  
   get "/api/venue/:id" do
     status 200
     content_type :json
