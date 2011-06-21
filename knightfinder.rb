@@ -62,53 +62,81 @@ class KnightFinder < Sinatra::Base
   end
 
 
-  #------ Venues Web Interface ------
+  #------ Venue Web Interface ------
   
   get "/:id" do
-    redirect "#{params[:id]}/view"
-  end
-
-  get "/:id/view" do
+    # TODO: Build Dashboard Page
     "Render Dashboard Page for Venue #{params[:id]}"
   end
 
   get "/:id/edit" do
+    # TODO: Build Edit Venue Page
     "Render Edit Form for Venue #{params[:id]}"
   end
 
-  post "/:id/edit" do
-    #Perform UPDATE on Venue
-    #Post data must contain fields to be updated.
-    #Redirect to Dashboard
+  put "/:id" do
+    # TODO: Build UPDATE Record on Venue
+  end
+  
+  post "/:id" do
+    # TODO: Build CREATE Record on Venue
+  end
+  
+  delete "/:id" do
+    # TODO: Build DELETE Record on Venue
   end
 
+  #------ Deals Web Interface ------
+
   get "/:id/deals" do
+    # TODO: Build Deals List Page or JSON (Fox AJAX)
+    "Render List of Deals for Venue #{params[:id]}"
+  end
+  
+  get "/:id/deals/:id/edit" do
+    # TODO: Build Edit Deals Page (or use partial somewehere else and scrap this route)
     "Render List of Deals for Venue #{params[:id]}"
   end
 
   post "/:id/deals" do
-    #Preform CREATE on Deals
-    #Post data must contain venue_id and all other fields to be created.
-    #Return new row as JSON
+    # TODO: Build CREATE Record on Deal
   end
 
-  post "/:id/deals/:deal_id" do
-    #Perform UPDATE on Deal
-    #Post must contain deal_id and details to be updated.
-    #Return updated row as JSON
+  put "/:id/deals/:deal_id" do
+    # TODO: Build UPDATE Record on Deal
   end
-
+  
+  delete 
+  "/:id/deals/:deal_id" do
+    # TODO: Build DELETE Record on Deal
+  end
 
   #------ API ------
   
-  # Expects "/api/venues?q=City" or "/api/venues?loc=45.6456677,0.567765". Will fail with 400 on anything else.
+  # Expects "/api/venues?q=City" or "/api/venues?loc=45.6456677,0.567765&limit=50". Will fail with 400 on anything else.
   get "/api/venues" do
-    if params[:loc]
+    
+    if params[:loc] && params[:limit]
       
-      # If the query is a location...
-      "Finding by LonLat: #{params[:loc].split('?')[0]}"
-      # Calculate all venues within 50 miles.
-      # Return 200 with JSON for all venues within 50 miles.
+      # If the query is a location GeoCode the Lat/Long sent in the URL and set up an empty array.
+      @current_location = Geokit::Geocoders::GoogleGeocoder.geocode(params[:loc])
+      @venues = []
+      
+      # Geocode each venue by Lat/Long and compare the distance to the location passed in the URL.
+      # If it's within the limit (passed by URL), add the venue to @venues array.
+      Venue.all.each do |venue|
+        geocoded_venue = Geokit::Geocoders::GoogleGeocoder.geocode(venue.ll)
+        @venues << venue if geocoded_venue.distance_to(@current_location) < params[:limit].to_f
+      end
+      
+      #Return JSONified array or 404.
+      if @venues.count > 0
+        status 200
+        @venues.to_json
+      else
+        status 404
+        "No Records Found"
+      end
       
     elsif params[:q]
       
