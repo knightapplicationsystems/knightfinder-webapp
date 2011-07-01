@@ -7,8 +7,8 @@ class CreateVisits < ActiveRecord::Migration
       t.string  :remote_ip
       t.string  :user_agent
       t.string  :city
-      t.string  :longditude
-      t.string  :lattitude
+      t.string  :longitude
+      t.string  :latitude
       
       t.timestamps
     end

@@ -19,7 +19,11 @@ class Venue < ActiveRecord::Base
   end
   
   def ll
-    "#{self.longditude},#{self.lattitude}"
+    "#{self.longitude},#{self.latitude}"
+  end
+  
+  def self.find_by_id(id)
+    self.where(id: id)[0]
   end
 end
 
@@ -66,22 +70,33 @@ class KnightFinder < Sinatra::Base
   
   get "/:id" do
     # TODO: Build Dashboard Page
-    "Render Dashboard Page for Venue #{params[:id]}"
+    @venue = Venue.find_by_id(params[:id])
+    erb :venue
   end
 
   get "/:id/edit" do
     # TODO: Build Edit Venue Page
-    "Render Edit Form for Venue #{params[:id]}"
+    @venue = Venue.find_by_id(params[:id])
+    erb :edit_venue
   end
 
-  put "/:id" do
-    # TODO: Build UPDATE Record on Venue
+  put "/:id/" do
+    puts "Firing PUT not POST"
+    puts "UPDATING RECORD #{params[:id]}"
+    @venue = Venue.find_by_id(params[:id])
+    @venue.update_attributes(params[:id])
+    redirect "#{params[:id]}"
   end
   
   post "/:id" do
+    puts "Firing POST not PUT"
     # TODO: Build CREATE Record on Venue
+    puts "UPDATING RECORD #{params[:id]}"
+    @venue = Venue.find_by_id(params[:id])
+    @venue.update_attributes(params[:id])
+    redirect "#{params[:id]}"
   end
-  
+
   delete "/:id" do
     # TODO: Build DELETE Record on Venue
   end
@@ -106,8 +121,7 @@ class KnightFinder < Sinatra::Base
     # TODO: Build UPDATE Record on Deal
   end
   
-  delete 
-  "/:id/deals/:deal_id" do
+  delete "/:id/deals/:deal_id" do
     # TODO: Build DELETE Record on Deal
   end
 
@@ -178,21 +192,23 @@ class KnightFinder < Sinatra::Base
     end
   end
 
-  # Expects "longditude", "lattitude" and "city" as POSTDATA.
+  # Expects "longitude", "latitude" and "city" as POSTDATA.
   post "/api/venue/:id/log" do
     
     @venue = Venue.find(params[:id])
     @visit = @venue.visits.new(  :request_uri  => request.env["REQUEST_URI"],
                         :remote_ip    => request.env["REMOTE_ADDR"],
                         :user_agent   => request.env["HTTP_USER_AGENT"],
-                        :longditude   => params[:longditude],
-                        :lattitude    => params[:lattitude],
+                        :longitude   => params[:longitude],
+                        :latitude    => params[:latitude],
                         :city         => params[:city])
                         
     if @visit.save!
       status 201
+      "Record Created"
     else
       status 500
+      "Internal Server Error - Failed to log visit"
     end
     
   end

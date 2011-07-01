@@ -1,0 +1,19 @@
+<h1><%= @venue.name %></h1>
+<h2>Edit Details</h2>
+
+<form action="/<%= @venue.id %>" method="post" accept-charset="utf-8">
+  <label for="name">Venue Name: </label>    <input placeholder="Your Venue" name="name" value="<%= @venue.name %>"><br/>
+  <label for="address1">Address: </label>   <input name="address1" value="<%= @venue.address1 %>"><br/>
+                                            <input name="address2" value="<%= @venue.address2 %>"><br/>
+                                            <input name="address3" value="<%= @venue.address3 %>"><br/>
+  <label for="postcode">Postcode: </label>  <input placeholder="AB12 3CD" name="postcode" value="<%= @venue.postcode %>"><br/>
+  <label for="phone">Phone: </label>        <input placeholder="01234 567 890" name="phone" value="<%= @venue.phone %>"><br/>
+  <label for="email">Email: </label>        <input placeholder="example@example.com" name="email" type="email" value="<%= @venue.email %>"><br/>
+  <label for="url">Website: </label>        <input placeholder="http://example.com" name="url" type="url" value="<%= @venue.url %>"><br/>
+  <label for="longitude">Long: </label>     <input name="longitude" value="<%= @venue.longitude %>"><br/>
+  <label for="latitude">Lat: </label>       <input name="latitude" value="<%= @venue.latitude %>"><br/>
+  <label for="name">Active: </label>        <input name="active" type="checkbox"  value="<%= @venue.active? %>"><br/>
+                                            <input type="submit" name="Submit" value="Save Changes"><br/>
+                                            <input name="_method" value="put" type="hidden"/>
+</form>
+

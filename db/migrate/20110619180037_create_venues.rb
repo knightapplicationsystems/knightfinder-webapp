@@ -10,8 +10,8 @@ class CreateVenues < ActiveRecord::Migration
       t.string  :phone
       t.string  :email
       t.string  :url
-      t.string  :longditude
-      t.string  :lattitude
+      t.string  :longitude
+      t.string  :latitude
       t.boolean :active, :default => false
       
       t.timestamps
