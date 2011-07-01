@@ -19,7 +19,7 @@ class Venue < ActiveRecord::Base
   end
   
   def ll
-    "#{self.longitude},#{self.latitude}"
+    "#{self.latitude}, #{self.longitude}"
   end
   
   def self.find_by_id(id)
@@ -128,24 +128,45 @@ class KnightFinder < Sinatra::Base
   #------ API ------
   
   # Expects "/api/venues?q=City" or "/api/venues?loc=45.6456677,0.567765&limit=50". Will fail with 400 on anything else.
+  # ENSURE: Latitude then Londitude!
+  
   get "/api/venues" do
     
     if params[:loc] && params[:limit]
       
-      # If the query is a location GeoCode the Lat/Long sent in the URL and set up an empty array.
-      @current_location = Geokit::Geocoders::GoogleGeocoder.geocode(params[:loc])
+      #Array to hold venues that match
       @venues = []
+
+      location = params[:loc].split(",").each {|a| a.strip}
+      limit = params[:limit].to_f/100
       
-      # Geocode each venue by Lat/Long and compare the distance to the location passed in the URL.
-      # If it's within the limit (passed by URL), add the venue to @venues array.
+      # Set up min and max lat and lon values, based on limit.
+      min_lat = (location[0].to_f - limit)
+      min_lon = (location[1].to_f - limit)
+      max_lat = (location[0].to_f + limit)
+      max_lon = (location[1].to_f + limit)
+      
+      # If the venue falls within the limits, add to @venues.
       Venue.all.each do |venue|
-        geocoded_venue = Geokit::Geocoders::GoogleGeocoder.geocode(venue.ll)
-        @venues << venue if geocoded_venue.distance_to(@current_location) < params[:limit].to_f
+        @venues << venue if ((venue.longitude.to_f > min_lon && venue.longitude.to_f < max_lon) && (venue.latitude.to_f > min_lat && venue.latitude.to_f < max_lat))
       end
       
-      #Return JSONified array or 404.
+      # REMOVED DUE TO EXCESSIVE CALLS TO GOOGLE... USING ABOVE HACKY THING INSTEAD.
+      #
+      # If the query is a location GeoCode the Lat/Long sent in the URL and set up an empty array.
+      # Geocode each venue by Lat/Long and compare the distance to the location passed in the URL.
+      # If it's within the limit (passed by URL), add the venue to @venues array.
+      #
+      # @current_location = Geokit::Geocoders::GoogleGeocoder.geocode(params[:loc])
+      # Venue.all.each do |venue|
+      #   geocoded_venue = Geokit::Geocoders::GoogleGeocoder.geocode(venue.ll)
+      #   @venues << venue if geocoded_venue.distance_to(@current_location) < params[:limit].to_f
+      # end
+      
+      # Return JSONified array or 404.
       if @venues.count > 0
         status 200
+        content_type :json
         @venues.to_json
       else
         status 404
