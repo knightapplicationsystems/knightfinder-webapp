@@ -216,7 +216,7 @@ class KnightFinder < Sinatra::Base
   # Expects "longitude", "latitude" and "city" as POSTDATA.
   post "/api/venue/:id/log" do
     
-    @venue = Venue.find(params[:id])
+    @venue = Venue.find_by_id(params[:id])
     @visit = @venue.visits.new(  :request_uri  => request.env["REQUEST_URI"],
                         :remote_ip    => request.env["REMOTE_ADDR"],
                         :user_agent   => request.env["HTTP_USER_AGENT"],
@@ -240,7 +240,7 @@ class KnightFinder < Sinatra::Base
   get "/api/venue/:id" do
     status 200
     content_type :json
-    Venue.find(params[:id]).to_json
+    Venue.find_by_id(params[:id]).to_json
   end
 
 end
