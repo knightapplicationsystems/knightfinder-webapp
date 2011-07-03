@@ -71,7 +71,7 @@ class KnightFinder < Sinatra::Base
   get "/:id" do
     # TODO: Build Dashboard Page
     @venue = Venue.find_by_id(params[:id])
-    erb :venue
+    erb :show_venue
   end
 
   get "/:id/edit" do
