@@ -164,7 +164,7 @@ class KnightFinder < Sinatra::Base
       # end
       
       # Return JSONified array or 404.
-      if @venues.size > 0
+      if @venues.length > 0
         status 200
         content_type :json
         @venues.to_json
@@ -203,7 +203,7 @@ class KnightFinder < Sinatra::Base
     
     @deals = Venue.find_by_id(params[:id]).deals
     
-    if @deals.size < 1
+    if @deals.length < 1
       status 404
       "No Deals Found"
     else
