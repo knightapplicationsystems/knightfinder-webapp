@@ -105,7 +105,9 @@ class KnightFinder < Sinatra::Base
 
   get "/:id/deals" do
     # TODO: Build Deals List Page or JSON (Fox AJAX)
-    "Render List of Deals for Venue #{params[:id]}"
+    @venue = Venue.find_by_id(params[:id])
+    @deals = @venue.deals
+    erb :show_deals
   end
   
   get "/:id/deals/:id/edit" do
@@ -202,9 +204,9 @@ class KnightFinder < Sinatra::Base
   get "/api/venue/:id/deals" do
     
     puts "Called Dealsk OK"
-    venue = Venue.find_by_id(params[:id])
+    @venue = Venue.find_by_id(params[:id])
     puts "Called venue OK"
-    @deals = venue.deals
+    @deals = @venue.deals
     puts @deals.inspect
     
     # if @deals.length < 1
