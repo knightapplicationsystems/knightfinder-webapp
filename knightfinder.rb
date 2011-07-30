@@ -204,7 +204,8 @@ class KnightFinder < Sinatra::Base
     puts "Called Dealsk OK"
     venue = Venue.find_by_id(params[:id])
     puts "Called venue OK"
-   # @deals = venue.deals
+    @deals = venue.deals
+    puts @venue.inspect
     
     # if @deals.length < 1
     #       status 404
