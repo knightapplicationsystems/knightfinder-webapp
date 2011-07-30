@@ -207,14 +207,14 @@ class KnightFinder < Sinatra::Base
     @deals = venue.deals
     puts "\n\n\nInspecting @deals: #{@deals.inspect}"
     
-    # if @deals.length < 1
-    #       status 404
-    #       "No Deals Found"
-    #     else
-      status 200
-      content_type :json
-      @deals.to_json
-    # end
+     if @deals.length < 1
+        status 404
+        "No Deals Found"
+      else
+        status 200
+        content_type :json
+        @deals.to_json
+      end
   end
 
   # Expects "longitude", "latitude" and "city" as POSTDATA.
