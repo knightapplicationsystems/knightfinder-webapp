@@ -201,15 +201,17 @@ class KnightFinder < Sinatra::Base
   # Returns deals for the given venue as JSON.
   get "/api/venue/:id/deals" do
     
-    @deals = Venue.find_by_id(params[:id]).deals
+    puts "Called Dealsk OK"
+   # venue = Venue.find_by_id(params[:id])
+   # @deals = venue.deals
     
     # if @deals.length < 1
     #       status 404
     #       "No Deals Found"
     #     else
       status 200
-      content_type :json
-      @deals.to_json
+    #  content_type :json
+    #  @deals.to_json
     # end
   end
 
