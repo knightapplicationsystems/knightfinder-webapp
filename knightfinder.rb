@@ -23,7 +23,7 @@ class Venue < ActiveRecord::Base
   end
   
   def self.find_by_id(id)
-    self.where(id: id)[0]
+    self.where(:id => id)[0]
   end
 end
 
