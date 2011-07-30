@@ -2,7 +2,7 @@ class CreateVisits < ActiveRecord::Migration
   def self.up
     create_table :visits do |t|
       t.integer :id, :null => false
-      t.string  :venue_id, :null => false
+      t.integer :venue_id, :null => false
       t.string  :request_uri
       t.string  :remote_ip
       t.string  :user_agent
@@ -16,5 +16,6 @@ class CreateVisits < ActiveRecord::Migration
   end
 
   def self.down
+    drop_table :visits
   end
 end

@@ -16,4 +16,6 @@ def load_data(source)
     item.save!
     puts "Venue \"#{venue[:name]}\" added..."
   end
-puts "#{@data.count} venues written to Database"
+  
+  puts "#{@data.count} venues written to Database"
+end

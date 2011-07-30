@@ -2,7 +2,7 @@ class CreateDeals < ActiveRecord::Migration
   def self.up
     create_table :deals do |t|
       t.integer :id, :null => false
-      t.string  :venue_id, :null => false
+      t.integer :venue_id, :null => false
       t.string  :summary
       t.string  :details
       t.datetime :expires
@@ -14,6 +14,6 @@ class CreateDeals < ActiveRecord::Migration
   end
 
   def self.down
-    drop_table :venues
+    drop_table :deals
   end
 end
