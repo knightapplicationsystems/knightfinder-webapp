@@ -202,7 +202,8 @@ class KnightFinder < Sinatra::Base
   get "/api/venue/:id/deals" do
     
     puts "Called Dealsk OK"
-   # venue = Venue.find_by_id(params[:id])
+    venue = Venue.find_by_id(params[:id])
+    puts "Called venue OK"
    # @deals = venue.deals
     
     # if @deals.length < 1
