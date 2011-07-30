@@ -47,6 +47,7 @@ class KnightFinder < Sinatra::Base
   
   configure do
     Geokit::Geocoders::google = 'ABQIAAAA3u5SpqaF2DYRIsPQ7SUS7hTtwS2snXC5p7JJaiv_N14kY4e6ixTzc_jYNIKYYCenoUoNg0PNmLBWvg'
+    set :method_override, true
   end
   
   #------ Generic Web Interface ------
@@ -80,22 +81,27 @@ class KnightFinder < Sinatra::Base
     erb :edit_venue
   end
 
-  put "/:id/" do
+  put "/:id" do
     puts "Firing PUT not POST"
     puts "UPDATING RECORD #{params[:id]}"
     @venue = Venue.find_by_id(params[:id])
-    @venue.update_attributes(params[:id])
+    
+    # Remove method and submit attributes from the hash so update_attributes can process it.
+    params.delete("_method")
+    params.delete("Submit")
+    
+    @venue.update_attributes(params)
     redirect "#{params[:id]}"
   end
   
-  post "/:id" do
-    puts "Firing POST not PUT"
-    # TODO: Build CREATE Record on Venue
-    puts "UPDATING RECORD #{params[:id]}"
-    @venue = Venue.find_by_id(params[:id])
-    @venue.update_attributes(params[:id])
-    redirect "#{params[:id]}"
-  end
+  # post "/:id" do
+  #   puts "Firing POST not PUT"
+  #   # TODO: Build CREATE Record on Venue
+  #   puts "UPDATING RECORD #{params[:id]}"
+  #   @venue = Venue.find_by_id(params[:id])
+  #   @venue.update_attributes(params[:id])
+  #   redirect "#{params[:id]}"
+  # end
 
   delete "/:id" do
     # TODO: Build DELETE Record on Venue
