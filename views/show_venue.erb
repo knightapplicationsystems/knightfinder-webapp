@@ -14,4 +14,10 @@
 <p>
   <a href="<%=@venue.id%>/edit">Edit Details</a>
 </p>
+<h2>Deals</h2>
+<ul>
+  <% @venue.deals.each do |deal| %>
+    <li><%= deal.summary %></li>
+  <% end %>
+</ul>
 

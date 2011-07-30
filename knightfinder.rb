@@ -203,14 +203,14 @@ class KnightFinder < Sinatra::Base
     
     @deals = Venue.find_by_id(params[:id]).deals
     
-    if @deals.length < 1
-      status 404
-      "No Deals Found"
-    else
+    # if @deals.length < 1
+    #       status 404
+    #       "No Deals Found"
+    #     else
       status 200
       content_type :json
       @deals.to_json
-    end
+    # end
   end
 
   # Expects "longitude", "latitude" and "city" as POSTDATA.
