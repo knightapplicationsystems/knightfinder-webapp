@@ -23,7 +23,7 @@ class Venue < ActiveRecord::Base
   end
   
   def self.find_by_id(id)
-    self.where(:id => id)[0]
+    self.where(id: id)[0]
   end
 end
 
@@ -203,19 +203,17 @@ class KnightFinder < Sinatra::Base
   # Returns deals for the given venue as JSON.
   get "/api/venue/:id/deals" do
     
-    puts "Called Dealsk OK"
-    @venue = Venue.find_by_id(params[:id])
-    puts "Called venue OK"
-    @deals = @venue.deals
-    puts @deals.inspect
+    venue = Venue.find_by_id(params[:id])
+    @deals = venue.deals
+    puts "\n\n\nInspecting @deals: #{@deals.inspect}"
     
     # if @deals.length < 1
     #       status 404
     #       "No Deals Found"
     #     else
       status 200
-    #  content_type :json
-    #  @deals.to_json
+      content_type :json
+      @deals.to_json
     # end
   end
 
