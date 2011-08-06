@@ -18,3 +18,14 @@
                                             
 </form>
 
+<h2>Admin Registration Details</h2>
+<p>To edit this venue's information and add/edit deals, register an admin email address and password.</p>
+<form action="/<%= @venue.id %>/registration" method="post" accept-charset="utf-8">
+  <input name="_method" value="put" type="hidden"/>
+  <label for="email">Login Email: </label>  <input placeholder="admin@example.com" name="login_email" type="login_email" value="<%= @venue.login_email %>"><br/>
+  <label for="url">Password: </label>       <input name="password" type="password" value=""><br/>
+                                            <input type="submit" name="Submit" value="Save Changes"><br/>
+                                            
+</form>
+
+

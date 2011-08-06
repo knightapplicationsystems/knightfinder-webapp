@@ -4,6 +4,8 @@ require 'bundler/setup'
 require 'sinatra/activerecord'
 require 'json'
 require 'geokit'
+require 'digest/md5'
+require 'pony'
 
 class Venue < ActiveRecord::Base
   validates_presence_of :name
@@ -33,6 +35,14 @@ class Deal < ActiveRecord::Base
   def self.active
     self.where(:active => true)
   end
+  
+  def self.featured
+    self.where(active: true, featured: true)
+  end
+  
+  def self.find_by_id(id)
+    self.where(id: id)[0]
+  end
 end
 
 class Visit < ActiveRecord::Base
@@ -58,7 +68,7 @@ class KnightFinder < Sinatra::Base
 
   get "/login" do
     "Login Page"
-    request.inspect
+    erb :login
   end
 
   post "/login" do
@@ -69,21 +79,22 @@ class KnightFinder < Sinatra::Base
 
   #------ Venue Web Interface ------
   
+  get "/new" do
+    erb :create_venue
+  end
+  
   get "/:id" do
-    # TODO: Build Dashboard Page
     @venue = Venue.find_by_id(params[:id])
     erb :show_venue
   end
 
   get "/:id/edit" do
-    # TODO: Build Edit Venue Page
     @venue = Venue.find_by_id(params[:id])
     erb :edit_venue
   end
 
   put "/:id" do
-    puts "Firing PUT not POST"
-    puts "UPDATING RECORD #{params[:id]}"
+    puts "UPDATING VENUE #{params[:id]}"
     @venue = Venue.find_by_id(params[:id])
     
     # Remove method and submit attributes from the hash so update_attributes can process it.
@@ -94,17 +105,62 @@ class KnightFinder < Sinatra::Base
     redirect "#{params[:id]}"
   end
   
-  # post "/:id" do
-  #   puts "Firing POST not PUT"
-  #   # TODO: Build CREATE Record on Venue
-  #   puts "UPDATING RECORD #{params[:id]}"
-  #   @venue = Venue.find_by_id(params[:id])
-  #   @venue.update_attributes(params[:id])
-  #   redirect "#{params[:id]}"
-  # end
+  post "/new" do
+    puts "CREATING VENUE #{params[:id]}..."
+    # Remove method and submit attributes from the hash so update_attributes can process it.
+    # params.delete("_method")
+    params.delete("Submit")
+    
+    @venue = Venue.new(params)
+    if @venue.save
+      puts "...DONE"
+      redirect @venue.id
+    else
+      puts "VENUE NOT CREATED"
+      status 500
+      "Venue Not Created"
+    end
+    
+  end
 
   delete "/:id" do
-    # TODO: Build DELETE Record on Venue
+    status 403
+    "You Cannot Delete Venues"
+  end
+  
+  put "/:id/registration" do
+    puts "REGISTERING VENUE #{params[:id]}"
+    @venue = Venue.find_by_id(params[:id])
+    
+    # Remove method and submit attributes from the hash so update_attributes can process it.
+    params.delete("_method")
+    params.delete("Submit")
+    
+    @venue.login_email = params[:login_email]
+    @venue.crypted_password = Digest::MD5.hexdigest(params[:password])
+    
+    # Send an Email to the Admin Address
+    
+    @return = Pony.mail(
+      to: params[:login_email],
+      from: "info@knightfinderapp.com",
+      subject: "#{@venue.name} has been registered on KnightFinder",
+      body: "Your Password is: #{params[:password]}",
+      :via => smtp,
+      via_options: {
+        :address        => 'smtp.sendgrid.net',
+        :port           => '25',
+        :authentication => :plain,
+        :user_name      => ENV['SENDGRID_USERNAME'],
+        :password       => ENV['SENDGRID_PASSWORD'],
+        :domain         => ENV['SENDGRID_DOMAIN']
+    })
+    
+    if @venue.save
+      puts @return.inspect
+      redirect "#{params[:id]}"
+    end
+    
   end
 
   #------ Deals Web Interface ------
@@ -121,16 +177,31 @@ class KnightFinder < Sinatra::Base
     "Render List of Deals for Venue #{params[:id]}"
   end
 
-  post "/:id/deals" do
-    # TODO: Build CREATE Record on Deal
+  post "/:venue_id/deals" do
+    puts "CREATING DEAL FOR #{params[:id]}..."
+    # Remove method and submit attributes from the hash so update_attributes can process it.
+    params.delete("Submit")
+    
+    @deal = Venue.find_by_id(params[:venue_id]).deals.new(params)
+    if @deal.save
+      redirect "/#{params[:venue_id]}"
+    end
   end
 
-  put "/:id/deals/:deal_id" do
-    # TODO: Build UPDATE Record on Deal
+  put "/:venue_id/deals/:id" do
+    @deal = Deal.find_by_id(params[:id])
+    params.delete("_method")
+    params.delete("Submit")
+    
+    @deal.update_attributes!(params)
+    redirect "/#{params[:venue_id]}"
   end
   
-  delete "/:id/deals/:deal_id" do
-    # TODO: Build DELETE Record on Deal
+  delete "/:venue_id/deals/:id" do
+    @deal = Deal.find_by_id(params[:id])
+    if @deal.delete
+      redirect "/#{params[:venue_id]}"
+    end
   end
 
   #------ API ------
@@ -155,7 +226,7 @@ class KnightFinder < Sinatra::Base
       max_lon = (location[1].to_f + limit)
       
       # If the venue falls within the limits, add to @venues.
-      Venue.all.each do |venue|
+      Venue.active.each do |venue|
         @venues << venue if ((venue.longitude.to_f > min_lon && venue.longitude.to_f < max_lon) && (venue.latitude.to_f > min_lat && venue.latitude.to_f < max_lat))
       end
       
@@ -184,8 +255,8 @@ class KnightFinder < Sinatra::Base
     elsif params[:q]
       
       # If the query is a search term, Find venues matching it by city or name, and group the city results by city.
-      venues_by_city = Venue.where("city lIKE ?", "%#{params[:q]}%").group_by {|e| e.city }
-      venues_by_name = Venue.where("name LIKE ?", "%#{params[:q]}%")
+      venues_by_city = Venue.active.where("city lIKE ?", "%#{params[:q]}%").group_by {|e| e.city }
+      venues_by_name = Venue.active.where("name LIKE ?", "%#{params[:q]}%")
       
       # Set up the return hash.
       @result = {:city_results => venues_by_city,
@@ -209,9 +280,7 @@ class KnightFinder < Sinatra::Base
   # Returns deals for the given venue as JSON.
   get "/api/venue/:id/deals" do
     
-    venue = Venue.find_by_id(params[:id])
-    @deals = venue.deals
-    puts "\n\n\nInspecting @deals: #{@deals.inspect}"
+    @deals = Venue.find_by_id(params[:id]).active_deals
     
      if @deals.length < 1
         status 404
@@ -223,6 +292,22 @@ class KnightFinder < Sinatra::Base
       end
   end
 
+
+  # Returns featured deals as JSON.
+  get "/api/featureddeals" do
+    
+    @deals = Deal.featured
+    
+     if @deals.length < 1
+        status 404
+        "There are no Featured Deals"
+      else
+        status 200
+        content_type :json
+        @deals.to_json
+      end
+  end
+  
   # Expects "longitude", "latitude" and "city" as POSTDATA.
   post "/api/venue/:id/log" do
     
