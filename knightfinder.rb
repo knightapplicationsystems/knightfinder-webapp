@@ -146,7 +146,7 @@ class KnightFinder < Sinatra::Base
       from: "info@knightfinderapp.com",
       subject: "#{@venue.name} has been registered on KnightFinder",
       body: "Your Password is: #{params[:password]}",
-      :via => smtp,
+      :via => :smtp,
       via_options: {
         :address        => 'smtp.sendgrid.net',
         :port           => '25',
