@@ -1,5 +1,10 @@
 <h1><%= @venue.name %></h1>
-<p><%= @venue.id %></p>
+<% if (@venue.priority > 0) %>
+  <div class="alert-message">
+    <p>This venue has priority over others.</p>
+  </div>
+<% end %>
+ID: <p><%= @venue.id %></p>
 <%= @venue.address1 %><br/>
 <%= @venue.address2 %><br/>
 <%= @venue.address3 %><br/>

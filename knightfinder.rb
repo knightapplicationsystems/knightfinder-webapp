@@ -290,6 +290,9 @@ class KnightFinder < Sinatra::Base
       #   @venues << venue if geocoded_venue.distance_to(@current_location) < params[:limit].to_f
       # end
       
+      # Sort Venues by Priority
+      @venues.sort! { |a,b| b.priority <=> a.priority }
+
       # Return JSONified array or 404.
       if @venues.length > 0
         status 200
@@ -303,8 +306,8 @@ class KnightFinder < Sinatra::Base
     elsif params[:q]
       
       # If the query is a search term, Find venues matching it by city or name, and group the city results by city.
-      venues_by_city = Venue.active.where("city lIKE ?", "%#{params[:q]}%").group_by {|e| e.city }
-      venues_by_name = Venue.active.where("name LIKE ?", "%#{params[:q]}%")
+      venues_by_city = Venue.active.where("city lIKE ?", "%#{params[:q]}%").group_by {|e| e.city } #TODO: Sort the venues within the cities by priority
+      venues_by_name = Venue.active.where("name LIKE ?", "%#{params[:q]}%").sort { |a,b| b.priority <=> a.priority } #Sorted by Priority
       
       # Set up the return hash.
       @result = {:city_results => venues_by_city,
