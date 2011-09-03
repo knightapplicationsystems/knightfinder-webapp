@@ -17,7 +17,7 @@ class Venue < ActiveRecord::Base
   end
   
   def active_deals
-    self.deals.active.where("expires < #{Date.today}")
+    self.deals.active.where("expires >= ?", (Time.now - 2.days))
   end
   
   def ll
@@ -33,7 +33,7 @@ class Deal < ActiveRecord::Base
   belongs_to :venue
   
   def self.active
-    self.where(:active => true)
+    self.where(:active => true).where("expires >= ?", (Time.now - 2.days))
   end
   
   def self.featured
