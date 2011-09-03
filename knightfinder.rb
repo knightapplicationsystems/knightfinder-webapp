@@ -365,6 +365,17 @@ class KnightFinder < Sinatra::Base
 
   # Returns featured deals as JSON.
   get "/api/featureddeals" do
+    @deals = Deal.featured
+
+    if @deals.length < 1
+      status 404
+      "There are no Featured Deals"
+    else
+      status 200
+      content_type :json
+      @deals.to_json
+    end
+  end
     
   
   # Expects "longitude", "latitude" and "city" as POSTDATA.
