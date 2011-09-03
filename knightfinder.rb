@@ -75,6 +75,8 @@ class KnightFinder < Sinatra::Base
   configure do
     Geokit::Geocoders::google = 'ABQIAAAA3u5SpqaF2DYRIsPQ7SUS7hTtwS2snXC5p7JJaiv_N14kY4e6ixTzc_jYNIKYYCenoUoNg0PNmLBWvg'
     set :method_override, true
+    set :root, File.dirname(__FILE__)
+    set :public, Proc.new { File.join(root, "public") }
   end
   
   ################## GENERAL WEB INTERFACE ###################
