@@ -206,12 +206,39 @@ class KnightFinder < Sinatra::Base
 
   #------ API ------
   
+  ########## TESTING STUFF ###########
+  
+  get '/api/timeout_test' do
+    x = 32
+    puts "Testing Timeout... Waiting for #{x} seconds"
+    sleep(x)
+    status 200
+    puts "Waited for #{x} seconds... OK"
+    "Waited for #{x} seconds"
+  end
+  
+  
+  ####################################
+  
+  
   # Expects "/api/venues?q=City" or "/api/venues?loc=45.6456677,0.567765&limit=50". Will fail with 400 on anything else.
   # ENSURE: Latitude then Londitude!
   
   get "/api/venues" do
     
     if params[:loc] && params[:limit]
+      
+      
+      # Write to the Logger that a search has been done.
+      #
+      # @logged_search = LoggedSearch.new(  :request_uri  => request.env["REQUEST_URI"],
+      #                                  :remote_ip    => request.env["REMOTE_ADDR"],
+      #                                  :user_agent   => request.env["HTTP_USER_AGENT"],
+      #                                  :longitude   => params[:longitude],
+      #                                  :latitude    => params[:latitude],
+      #                                  :city         => params[:city])
+      # @logged_search.save!
+      
       
       #Array to hold venues that match
       @venues = []
