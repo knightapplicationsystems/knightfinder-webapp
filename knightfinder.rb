@@ -77,7 +77,7 @@ class KnightFinder < Sinatra::Base
     set :method_override, true
   end
   
-  #------ Generic Web Interface ------
+  ################## GENERAL WEB INTERFACE ###################
 
   get "/" do
     redirect "/login"
@@ -95,7 +95,7 @@ class KnightFinder < Sinatra::Base
   end
 
 
-  #------ Venue Web Interface ------
+  ################## VENUES WEB INTERFACE ###################
   
   get "/new" do
     erb :create_venue
@@ -181,7 +181,7 @@ class KnightFinder < Sinatra::Base
     
   end
 
-  #------ Deals Web Interface ------
+  ################## DEALS WEB INTERFACE ###################
 
   get "/:id/deals" do
     # TODO: Build Deals List Page or JSON (Fox AJAX)
@@ -222,9 +222,8 @@ class KnightFinder < Sinatra::Base
     end
   end
 
-  #------ API ------
   
-  ########## TESTING STUFF ###########
+  ########## TESTING & DEVELOPMENT CODE ###########
   
   get '/api/timeout_test' do
     x = 32
@@ -236,7 +235,7 @@ class KnightFinder < Sinatra::Base
   end
   
   
-  ####################################
+  ################## WEB SERVICE API ###################
   
   
   # Expects "/api/venues?q=City" or "/api/venues?loc=45.6456677,0.567765&limit=50". Will fail with 400 on anything else.
@@ -327,9 +326,6 @@ class KnightFinder < Sinatra::Base
   end
 
 
-
-
-
   # Returns deals for the given venue as JSON.
   get "/api/venue/:id/deals" do
     
@@ -370,21 +366,6 @@ class KnightFinder < Sinatra::Base
   # Returns featured deals as JSON.
   get "/api/featureddeals" do
     
-    @deals = Deal.featured
-    
-     if @deals.length < 1
-        status 404
-        "There are no Featured Deals"
-      else
-        status 200
-        content_type :json
-        @deals.to_json
-      end
-  end
-  
-  
-  
-  
   
   # Expects "longitude", "latitude" and "city" as POSTDATA.
   # GET Because this shouldn't be protected in any way - it's only a logger.
@@ -409,14 +390,9 @@ class KnightFinder < Sinatra::Base
     
   end
 
-
-
-
-
-
-  #------- NOT USED YET --------
   
-  #These routes & methods are included to maintain CRUD completeness.
+  # Returns a single venue as JSON.
+  # NOT USED YET
   get "/api/venue/:id" do
     status 200
     content_type :json
