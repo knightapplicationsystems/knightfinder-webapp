@@ -7,10 +7,15 @@ require 'geokit'
 require 'digest/md5'
 require 'pony'
 
+
+####################### MODELS #######################
+
+
 class Venue < ActiveRecord::Base
   validates_presence_of :name
   has_many :deals
   has_many :visits
+  has_many :logged_deal_views
   
   def self.active
     self.where(:active => true)
@@ -37,7 +42,7 @@ class Deal < ActiveRecord::Base
   end
   
   def self.featured
-    self.where(active: true, featured: true)
+    self.active.where(featured: true)
   end
   
   def self.find_by_id(id)
@@ -49,9 +54,21 @@ class Visit < ActiveRecord::Base
   belongs_to :venue
 end
 
+class LoggedSearch < ActiveRecord::Base
+  
+end
+
+class LoggedDealSave < ActiveRecord::Base
+  belongs_to :venue
+end
+  
+
+####################### END MODELS #######################
 
 
 
+
+####################### APPLICATION #######################
 
 class KnightFinder < Sinatra::Base
   
@@ -227,18 +244,22 @@ class KnightFinder < Sinatra::Base
   
   get "/api/venues" do
     
+    # Write to the LoggedSearches that a search has been done.
+    
+    @logged_search = LoggedSearch.new(  :request_uri  => request.env["REQUEST_URI"],
+                                        :remote_ip    => request.env["REMOTE_ADDR"],
+                                        :user_agent   => request.env["HTTP_USER_AGENT"],
+                                        :location     => params[:loc],
+                                        :limit        => params[:limit],
+                                        :query        => params[:q])
+    @logged_search.save!
+    puts "Search call to #{request.env["REQUEST_URI"]} logged"
+    
+    
+    # If the loc and limit paramaters have been sent.
     if params[:loc] && params[:limit]
       
       
-      # Write to the Logger that a search has been done.
-      #
-      # @logged_search = LoggedSearch.new(  :request_uri  => request.env["REQUEST_URI"],
-      #                                  :remote_ip    => request.env["REMOTE_ADDR"],
-      #                                  :user_agent   => request.env["HTTP_USER_AGENT"],
-      #                                  :longitude   => params[:longitude],
-      #                                  :latitude    => params[:latitude],
-      #                                  :city         => params[:city])
-      # @logged_search.save!
       
       
       #Array to hold venues that match
@@ -305,6 +326,10 @@ class KnightFinder < Sinatra::Base
     end 
   end
 
+
+
+
+
   # Returns deals for the given venue as JSON.
   get "/api/venue/:id/deals" do
     
@@ -318,6 +343,27 @@ class KnightFinder < Sinatra::Base
         content_type :json
         @deals.to_json
       end
+  end
+
+  # Logs a record to the LoggedDealSaves
+  # GET Because this shouldn't be protected in any way - it's only a logger.
+  get "/api/venue/:venue_id/deals/:deal_id/log" do
+    
+    @logged_deal_save = LoggedDealSave.new( :request_uri  => request.env["REQUEST_URI"],
+                                            :remote_ip    => request.env["REMOTE_ADDR"],
+                                            :user_agent   => request.env["HTTP_USER_AGENT"],
+                                            :venue_id     => params[:venue_id],
+                                            :deal_id      => params[:deal_id],
+                                            :deal_summary => Deal.find_by_id(params[:deal_id]).summary)
+    if @logged_deal_save.save!
+      puts "Deal :deal_id for #{Venue.find_by_id(params[:venue_id]).name} was saved by a user"
+      status 201
+      "Save Logged"
+    else
+      status 500
+      "Internal Server Error - Failed to log deal save"
+    end
+    
   end
 
 
@@ -336,26 +382,37 @@ class KnightFinder < Sinatra::Base
       end
   end
   
+  
+  
+  
+  
   # Expects "longitude", "latitude" and "city" as POSTDATA.
-  post "/api/venue/:id/log" do
+  # GET Because this shouldn't be protected in any way - it's only a logger.
+  get "/api/venue/:id/log" do
     
     @venue = Venue.find_by_id(params[:id])
-    @visit = @venue.visits.new(  :request_uri  => request.env["REQUEST_URI"],
-                        :remote_ip    => request.env["REMOTE_ADDR"],
-                        :user_agent   => request.env["HTTP_USER_AGENT"],
-                        :longitude   => params[:longitude],
-                        :latitude    => params[:latitude],
-                        :city         => params[:city])
+    @visit = @venue.visits.new(   :request_uri  => request.env["REQUEST_URI"],
+                                  :remote_ip    => request.env["REMOTE_ADDR"],
+                                  :user_agent   => request.env["HTTP_USER_AGENT"],
+                                  :longitude   => params[:longitude],
+                                  :latitude    => params[:latitude],
+                                  :city         => params[:city])
                         
     if @visit.save!
+      puts "Visit to #{@venue.name} was logged"
       status 201
-      "Record Created"
+      "Visit Logged"
     else
       status 500
       "Internal Server Error - Failed to log visit"
     end
     
   end
+
+
+
+
+
 
   #------- NOT USED YET --------
   
