@@ -17,7 +17,7 @@ class Venue < ActiveRecord::Base
   end
   
   def active_deals
-    self.deals.active
+    self.deals.active.where("expires < #{Date.today}")
   end
   
   def ll
@@ -64,6 +64,7 @@ class KnightFinder < Sinatra::Base
 
   get "/" do
     redirect "/login"
+    puts "The DateTime, According to this ruby app is: #{Time.now}"
   end
 
   get "/login" do
