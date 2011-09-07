@@ -1,31 +1,46 @@
 <h1><%= @venue.name %></h1>
 <h2>Edit Details</h2>
 
-<form action="/<%= @venue.id %>" method="post" accept-charset="utf-8">
+<form class="row" action="/<%= @venue.id %>" method="post" accept-charset="utf-8">
   <input name="_method" value="put" type="hidden"/>
-  <label for="name">Venue Name: </label>    <input placeholder="Your Venue" name="name" value="<%= @venue.name %>"><br/>
-  <label for="address1">Address: </label>   <input name="address1" value="<%= @venue.address1 %>"><br/>
-                                            <input name="address2" value="<%= @venue.address2 %>"><br/>
-                                            <input name="address3" value="<%= @venue.address3 %>"><br/>
-  <label for="postcode">Postcode: </label>  <input placeholder="AB12 3CD" name="postcode" value="<%= @venue.postcode %>"><br/>
-  <label for="phone">Phone: </label>        <input placeholder="01234 567 890" name="phone" value="<%= @venue.phone %>"><br/>
-  <label for="email">Email: </label>        <input placeholder="example@example.com" name="email" type="email" value="<%= @venue.email %>"><br/>
-  <label for="url">Website: </label>        <input placeholder="http://example.com" name="url" type="url" value="<%= @venue.url %>"><br/>
-  <label for="longitude">Long: </label>     <input name="longitude" value="<%= @venue.longitude %>"><br/>
-  <label for="latitude">Lat: </label>       <input name="latitude" value="<%= @venue.latitude %>"><br/>
-  <label for="name">Active: </label>        <input name="active" type="checkbox"  value="active" <%= "checked" if @venue.active? %>><br/>
-                                            <input type="submit" name="Submit" value="Save Changes"><br/>
-                                            
+  <div class="span8">
+    <div class="clearfix"><label for="name">Venue Name: </label>    <div class="input"><input placeholder="Your Venue" name="name" value="<%= @venue.name %>"><br/></div></div>
+    <div class="clearfix"><label for="address1">Address: </label>   <div class="input"><input name="address1" value="<%= @venue.address1 %>"><br/></div>
+                                                                    <div class="input"><input name="address2" value="<%= @venue.address2 %>"><br/></div>
+                                                                    <div class="input"><input name="address3" value="<%= @venue.address3 %>"><br/></div></div>
+    <div class="clearfix"><label for="postcode">Postcode: </label>  <div class="input"><input placeholder="AB12 3CD" name="postcode" value="<%= @venue.postcode %>"><br/></div></div>
+    <div class="clearfix"><label for="phone">Phone: </label>        <div class="input"><input placeholder="01234 567 890" name="phone" value="<%= @venue.phone %>"><br/></div></div>
+  </div>
+  <div class="span8">
+    <div class="clearfix"><label for="email">Email: </label>        <div class="input"><input placeholder="example@example.com" name="email" type="email" value="<%= @venue.email %>"><br/></div></div>
+    <div class="clearfix"><label for="url">Website: </label>        <div class="input"><input placeholder="http://example.com" name="url" type="url" value="<%= @venue.url %>"><br/></div></div>
+    <div class="clearfix"><label for="longitude">Long: </label>     <div class="input"><input name="longitude" value="<%= @venue.longitude %>"><br/></div></div>
+    <div class="clearfix"><label for="latitude">Lat: </label>       <div class="input"><input name="latitude" value="<%= @venue.latitude %>"><br/></div></div>
+    <div class="clearfix"><label for="name">Active: </label>        <div class="input"><input name="active" type="checkbox"  value="active" <%= "checked" if @venue.active? %>><br/></div></div>
+  </div>
+  
+  <div class="row">
+    <div class="actions">
+      <input type="submit" class="btn primary" value="Save Changes">
+      &nbsp;<input type="reset" class="btn" value="Cancel">
+      &nbsp;<input type="button" class="btn danger" value="Delete Venue" disabled >
+    </div>
+  </div>                                         
 </form>
+
 
 <h2>Admin Registration Details</h2>
 <p>To edit this venue's information and add/edit deals, register an admin email address and password.</p>
 <form action="/<%= @venue.id %>/registration" method="post" accept-charset="utf-8">
   <input name="_method" value="put" type="hidden"/>
-  <label for="email">Login Email: </label>  <input placeholder="admin@example.com" name="login_email" type="login_email" value="<%= @venue.login_email %>"><br/>
-  <label for="url">Password: </label>       <input name="password" type="password" value=""><br/>
-                                            <input type="submit" name="Submit" value="Save Changes"><br/>
-                                            
+  <div class="clearfix"><label for="email">Login Email: </label>  <div class="input"><input placeholder="admin@example.com" name="login_email" type="login_email" value="<%= @venue.login_email %>"><br/></div></div>
+  <div class="clearfix"><label for="url">Password: </label>       <div class="input"><input name="password" type="password" value=""><br/></div></div>
+  
+  <div class="row">
+    <div class="actions">
+     <input type="submit" class="btn primary" name="Submit" value="Save Changes"><br/>
+    </div>
+  </div>
 </form>
 
 
