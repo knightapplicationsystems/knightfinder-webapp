@@ -4,38 +4,69 @@
     <p>This venue has priority over others.</p>
   </div>
 <% end %>
-ID: <p><%= @venue.id %></p>
-<%= @venue.address1 %><br/>
-<%= @venue.address2 %><br/>
-<%= @venue.address3 %><br/>
-<%= @venue.postcode %><br/>
-<%= @venue.phone %><br/>
-<%= @venue.email %><br/>
-<%= @venue.url %><br/>
-<%= @venue.longitude %><br/>
-<%= @venue.latitude %><br/>
-<%= @venue.active? %><br/>
+<div id="venue-details" class="row vcard">
+  
+  <div id="venue-contact" class="span7">
+    <a href="<%=@venue.id%>/edit">Edit</a>
+  
+    <address class="fn address">
+      <%= @venue.address1 %><br/>
+      <%= @venue.address2 %><br/>
+      <%= @venue.address3 %><br/>
+      <%= @venue.postcode %><br/>
+    </address>
+  
+    <a href="tel:<%= @venue.phone %>" class="fn tel"><%= @venue.phone %><br/>
+    <a href="mailto:<%= @venue.email %>" class="fn email"><%= @venue.email %><br/>
+    <a href="<%= @venue.url %>" class="fn url"><%= @venue.url %><br/>
+    <a href="http://maps.google.co.uk/?ll=<%= @venue.latitude %>,<%= @venue.longitude %>" class="longlat">long: <%= @venue.longitude %> / lat: <%= @venue.latitude %></a>
+  </div>
 
-<p>
-  <a href="<%=@venue.id%>/edit">Edit Details</a>
-</p>
+  <div id="map_canvas" class="span8">
+  </div>
+</div>
 
-<% if @venue.login_email == "" || @venue.login_email == nil %>
-  <h2>Admin Registration Details</h2>
-  <p>To edit this venue's information and add/edit deals, register an admin email address and password.</p>
-  <form action="/<%= @venue.id %>/registration" method="post" accept-charset="utf-8">
-    <input name="_method" value="put" type="hidden"/>
-    <label for="email">Login Email: </label>  <input placeholder="admin@example.com" name="login_email" type="login_email" value="<%= @venue.login_email %>"><br/>
-    <label for="url">Password: </label>       <input name="password" type="password" value=""><br/>
-                                              <input type="submit" name="Submit" value="Save Changes"><br/>
-                                            
-  </form>
-<% end %>
+<div class="row" id="register-venue">
+  <% if @venue.login_email == "" || @venue.login_email == nil %>
+    <h2>Register this Venue</h2>
+    <form action="/<%= @venue.id %>/registration" method="post" accept-charset="utf-8">
+      <div class="clearfix"><input name="_method" value="put" type="hidden"/>
+      <div class="clearfix"><label for="email">Login Email: </label>  <div class="input"><input placeholder="admin@example.com" name="login_email" type="login_email" value="<%= @venue.login_email %>"><br/></div></div>
+      <div class="clearfix"><label for="url">Password: </label>       <div class="input"><input name="password" type="password" value=""><br/></div></div>
 
-<h2>Deals</h2>
-<ul>
-  <% @venue.deals.each do |deal| %>
-    <li><%= deal.summary %></li>
+      <div class="row">
+        <div class="actions">
+         <input type="submit" class="btn primary" name="Submit" value="Save Changes"><br/>
+        </div>
+      </div>                                            
+    </form>
   <% end %>
-</ul>
+</div>
+
+<div class="row" id="deals">
+  <h2>Deals</h2>
+  <ul>
+    <% @venue.deals.each do |deal| %>
+      <li><%= deal.summary %></li>
+    <% end %>
+  </ul>
+</div>
+
+    <script type="text/javascript"> 
+ 
+        var myLatlng = new google.maps.LatLng(<%= @venue.latitude %>,<%= @venue.longitude %>);
+        var myOptions = {
+          zoom: 15,
+          center: myLatlng,
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+        
+        var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+        var marker = new google.maps.Marker({
+                position: myLatlng,
+                map: map,
+                zIndex: Math.round(myLatlng.lat()*-100000)<<5});
+        
+        
+    </script>
 

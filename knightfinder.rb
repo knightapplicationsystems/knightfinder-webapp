@@ -88,6 +88,7 @@ class KnightFinder < Sinatra::Base
 
   get "/login" do
     "Login Page"
+    @venues = Venue.all #Remove when Live
     erb :login
   end
 

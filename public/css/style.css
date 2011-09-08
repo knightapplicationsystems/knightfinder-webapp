@@ -1,3 +1,8 @@
 body {
   padding-top: 50px;
 }
+
+#venue-contact, #map_canvas {
+  border: 1px solid #aaa;
+  height: 250px;
+}

@@ -1,5 +1,8 @@
-<h1>KnightFinder</h1>
-<p>I am the Edge</p>
-<ul>
-  <li><a href="/new">Create New Venue</a></li>
+<h1 style="text-align:center;margin-top:50px;">I am the Edge</h1>
+
+<h2>Venues</h2>
+<ul style="-moz-column-count:4;-moz-column-gap:1em;-webkit-column-count:4;-webkit-column-gap: 1em;">
+<% @venues.each do |v| %>
+  <li><a href="/<%= v.id %>"><%= v.name %></a></li>
+<% end %>
 </ul>

@@ -1,28 +1,35 @@
 <!doctype html>
-<html>
-<head>
-  <title>KnightFinder</title>
-  <link rel="stylesheet" href="/css/bootstrap-1.2.0.min.css">
-  <link rel="stylesheet" href="/css/style.css">
+<!--[if lt IE 7 ]> <html lang="en" class="no-js ie6"> <![endif]--> 
+<!--[if IE 7 ]>    <html lang="en" class="no-js ie7"> <![endif]--> 
+<!--[if IE 8 ]>    <html lang="en" class="no-js ie8"> <![endif]--> 
+<!--[if IE 9 ]>    <html lang="en" class="no-js ie9"> <![endif]--> 
+<!--[if (gte IE 9)|!(IE)]><!--> 
+<html class="no-js" lang="en"> 
+  <!--<![endif]--> 
+  <head> 
+    <meta charset="utf-8" />
+    <title>KnightFinder</title>
+    <link rel="stylesheet" href="/css/bootstrap-1.2.0.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
+  </head>
+  <body>
   
-</head>
-<body>
-  
-  <div class="topbar">
-    <div class="fill">
-      <div class="container">
-        <h3><a href="/">KnightFinder</a></h3>
-        <ul>
-          <li class="active"><a href="#">Dashboard</a></li>
-          <li><a href="#">Settings</a></li>
-        </ul>
-      </div>
-    </div><!-- /fill -->
-  </div>
+    <div class="topbar">
+      <div class="fill">
+        <div class="container">
+          <h3><a href="/">KnightFinder</a></h3>
+          <ul>
+            <li class="active"><a href="#">Dashboard</a></li>
+            <li><a href="/new">New Venue</a></li>
+          </ul>
+        </div>
+      </div><!-- /fill -->
+    </div>
   
   
-  <div class="container">
-    <%= yield %>
-  </div>
-</body>
+    <div class="container" role="main">
+      <%= yield %>
+    </div>
+  </body>
 </html>
