@@ -82,8 +82,9 @@ class KnightFinder < Sinatra::Base
   ################## GENERAL WEB INTERFACE ###################
 
   get "/" do
-    redirect "/login"
+    #redirect "/login"
     puts "The DateTime, According to this ruby app is: #{Time.now}"
+    erb :index
   end
 
   get "/login" do
