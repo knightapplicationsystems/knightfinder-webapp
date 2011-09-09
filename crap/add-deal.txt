@@ -1,0 +1,9 @@
+@deal = Deal.new
+@deal.venue_id = 5
+@deal.summary = "£3.50 Vodka & Red Bull"
+@deal.details = "Exclusive £3.50 Vodka & Red Bull, any time Sunday - Thursday only with this voucher."
+@deal.active = true
+@deal.featured = true
+@deal.expires = Date.today + 4.months
+@deal.save!
+
