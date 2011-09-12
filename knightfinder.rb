@@ -159,6 +159,7 @@ class KnightFinder < Sinatra::Base
     # Remove method and submit attributes from the hash so update_attributes can process it.
     params.delete("_method")
     params.delete("Submit")
+    params.delete("id")
     
     @venue.login_email = params[:login_email]
     @venue.crypted_password = Digest::MD5.hexdigest(params[:password])
