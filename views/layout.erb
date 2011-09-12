@@ -17,7 +17,9 @@
     <script>
       google.load("jquery", "1.6.3");
     </script>
-    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
+    <script src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
+    <script src="/js/jquery.timeago.js"></script>
+    <script src="/js/application.js"></script>
   </head>
   <body>
   
@@ -33,9 +35,13 @@
       </div><!-- /fill -->
     </div>
   
-  
-    <div class="container" role="main">
-      <%= yield %>
+    <div class="wrapper">
+      <div class="container" role="main">
+        <%= yield %>
+      </div>
     </div>
+    <footer>
+      <p> &copy; Copyright 2011 KnightFinder. All Rights Reserved.</p>
+    </footer>
   </body>
 </html>

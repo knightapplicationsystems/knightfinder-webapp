@@ -1,9 +1,61 @@
+@venue = Venue.new
+@venue.name = "Latin Lounge"
+@venue.address1 = "14 West Street"
+@venue.address2 = ""
+@venue.address3 = ""
+@venue.postcode = "BN1 2RQ"
+@venue.phone = "441273958349"
+@venue.email = "reservations@latin-lounge.com"
+@venue.url = "http://www.latin-lounge.com"
+@venue.longitude = "-0.144531"
+@venue.latitude = "50.821514"
+@venue.active = true
+@venue.city = "Brighton"
+@venue.priority = 0
+@venue.save!
+Venue.last.id
+
 @deal = Deal.new
-@deal.venue_id = 5
-@deal.summary = "£3.50 Vodka & Red Bull"
-@deal.details = "Exclusive £3.50 Vodka & Red Bull, any time Sunday - Thursday only with this voucher."
+@deal.venue_id = 1376
+@deal.summary = "£2 Vodka/Rum + mixer"
+@deal.details = "Exclusive to KnightFinder: £2 vodka/rum + mixer. Monday - Wednesday only." 
 @deal.active = true
-@deal.featured = true
+@deal.featured = false
 @deal.expires = Date.today + 4.months
 @deal.save!
 
+@deal = Deal.new
+@deal.venue_id = 1376
+@deal.summary = "£1.50 Vodka Shots"
+@deal.details = "Exclusive to KnightFinder: Vodka Shot for £1.50, Monday - Wednesday only." 
+@deal.active = true
+@deal.featured = false
+@deal.expires = Date.today + 4.months
+@deal.save!
+
+@deal = Deal.new
+@deal.venue_id = 1376
+@deal.summary = "Beer Bucket & Nachos for £15"
+@deal.details = "Beer Bucket (5 beers) and a plate of nachos for £15. To share only" 
+@deal.active = true
+@deal.featured = false
+@deal.expires = Date.today + 4.months
+@deal.save!
+
+@deal = Deal.new
+@deal.venue_id = 1376
+@deal.summary = "Sangria & Nachos for £15"
+@deal.details = "A jug of Sangria and a plate of nachos for £15. To share only" 
+@deal.active = true
+@deal.featured = false
+@deal.expires = Date.today + 4.months
+@deal.save!
+
+@deal = Deal.new
+@deal.venue_id = 1376
+@deal.summary = "Selected cocktail jugs for £15"
+@deal.details = "Selected cocktail jugs for £15. To share only" 
+@deal.active = true
+@deal.featured = false
+@deal.expires = Date.today + 4.months
+@deal.save!

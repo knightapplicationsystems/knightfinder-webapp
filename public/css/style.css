@@ -1,8 +1,122 @@
 body {
-  padding-top: 50px;
+  padding-top: 40px;
+  background: #598aae url(/images/tile.png) left top repeat; /* #8dcaf0 #73acd2 */
 }
+
+.wrapper {
+  background: #fff;
+  border-right: 1px solid #ddd;
+  border-left: 1px solid #ddd;
+  margin: 0 auto;
+  width: 960px;
+  padding: 0 10px;
+  
+  -webkit-box-shadow: 1px 1px 8px rgba(0, 0, 0, 0.3), -1px -1px 8px rgba(0, 0, 0, 0.3);
+  -moz-box-shadow:    1px 1px 8px rgba(0, 0, 0, 0.3), -1px -1px 8px rgba(0, 0, 0, 0.3);
+  box-shadow:         1px 1px 8px rgba(0, 0, 0, 0.3), -1px -1px 8px rgba(0, 0, 0, 0.3);
+}
+
+header {
+  padding-bottom: 20px;
+}
+
+h1 {
+  display: inline;
+  padding: 5px 10px;
+  border: 1px solid #555;
+  background: #73acd2;/* #1B86C9  #73acd2 #80bee9 */;
+  
+  -moz-box-shadow:    0 1px 5px #888;
+  -webkit-box-shadow: 0 10px 5px #888;
+  box-shadow:         0 1px 5px #888;
+  
+  -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 30px rgba(0, 0, 0, 0.2) inset;
+  -moz-box-shadow:    0 1px 4px rgba(0, 0, 0, 0.3), 0 0 30px rgba(0, 0, 0, 0.2) inset;
+  box-shadow:         0 1px 4px rgba(0, 0, 0, 0.3), 0 0 30px rgba(0, 0, 0, 0.2) inset;
+  
+  -webkit-border-radius: 4px;
+  -moz-border-radius:    4px;
+  border-radius:         4px;
+
+  text-shadow: 1px 1px 0 rgba(255,255,255,0.3), -1px -1px 0 rgba(0,0,0,0.3);
+}
+  
+
+
+
+
+
+
+
+
+.details-form {
+  border-width: 1px;
+  border-style: solid;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  background-color: #fdf5d9;
+  border-color: #d5d5d5; /* #fceec1; */
+}
+
+.details-form form {
+  margin-bottom: 0;
+}
+
+.details-form .actions {
+  margin-bottom: 0;
+  padding-left: 180px;
+}
+
+.details-form .input {
+  margin-left: 180px;
+}
+
+.details-form h2 {
+  margin-left: 10px;
+  margin-right: 10px;
+  border-bottom: 1px solid #fceec1; /*rgba(0,0,0,0.3);*/
+  text-shadow: 1px 1px 0 rgba(255,255,255,0.3);
+}
+
+
+
+
 
 #venue-contact, #map_canvas {
   border: 1px solid #aaa;
   height: 250px;
+}
+
+.edit-deal-row {
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+  padding: 0;
+  background-color: #d1eed1;
+  border-color: #bfe7bf;
+  display: none;
+}
+
+.edit-deal-row td {
+  vertical-align: top;
+}
+
+.edit-deal-row .btn {
+  width: 50px;
+}
+
+
+
+
+
+
+
+
+footer {
+  width: 960px;
+  height: 15px;
+  font-size: 0.7em;
+  background-color: rgba(0,0,0,0.1);
+  color: #ddd;
+  margin: 0 auto;
+  padding: 5px 10px;
 }

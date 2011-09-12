@@ -1,14 +1,132 @@
-<div id="wrapper">
-  <h1>KnightFinder</h1>
-  <h2>It's on the way...</h2>
-</div>
-<div id="topbar">
-  <a href="#" id="signin-link">Sign In</a>
-</div>
-<form action="/" method="post" id="signin-form">
-  <label for="username">Email &nbsp;</label>
-  <input type="text" name="username" />
-  <label for="password">Password &nbsp;</label>
-  <input type="password" name="password"  />
-  <input type="submit" value="Sign In" name="submit" class="btn primary submit" />
-</form>
+<!doctype html>
+<head> 
+  <meta charset="utf-8" />
+  <title>KnightFinder</title>
+  <link rel="stylesheet" href="/css/bootstrap-1.2.0.min.css">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1"> <!-- Chrome Frame Compatibility-->
+  <script src="js/modernizr.custom.60979.js"></script>
+  <script src="https://www.google.com/jsapi?key=ABQIAAAAnxA5op8H9hGU76J_gc5jlRRldTRvolzTtbbPz8ZzUDH9XU-MPRQIHthW-PvIOWqcd1oXE6SL6nZaXg"></script>
+  <script>
+    google.load("jquery", "1.6.3");
+  </script>
+  <script src="/js/application.js"></script>
+  
+  <style media="screen">
+  
+    html {
+      height: 100%;
+      background: #1B86C9 url(images/tile.png) left top repeat;
+    }
+    
+    body {
+      margin: 0;
+      height: 100%;
+      background: #1B86C9 url(images/tile.png) left top repeat;
+    }
+    
+    #wrapper {
+      vertical-align: middle;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      margin-top: -206px;
+      margin-left: -167px;
+    }
+    h1 {
+      text-indent: -2000px;
+      background: url(images/logo.png);
+      display: block;
+      height: 413px;
+      width: 334px;
+    }
+    
+    h2 {
+      text-align: center;
+      color: #333;
+      font-size: 14px;
+      margin-top: -50px;
+    }
+    
+    #signin-form {
+      width: 200px;
+      background: #E9EAEE;
+      padding: 10px;
+      font-size: 14px;
+      color: #333;
+      -webkit-border-radius: 5px;
+      -moz-border-radius: 5px;
+      border-radius: 5px;
+      -webkit-box-shadow: 1px 1px 6px rgba(0,0,0, 0.3);
+      -moz-box-shadow: 1px 1px 6px rgba(0,0,0, 0.3);
+      box-shadow: 1px 1px 6px rgba(0,0,0, 0.3);
+      border: 1px solid white;
+      display: none;
+      margin: -2px 20px auto auto;
+    }
+    
+    input {
+      width: 120px;
+      height: 12px;
+      margin-bottom: 5px;
+    }
+    
+    label {
+      width: 70px;
+      line-height: 12px;
+      font-size: 12px;
+    }
+    
+    .submit {
+      width: 120px;
+      margin: 0 0 0 70px;
+    }
+    
+    #topbar {
+      text-align: right;
+      width: 100%;
+      margin-top: 20px;
+    }
+    #topbar .hover {
+      background: #E9EAEE;
+      color: #333;
+      text-shadow: #fff 1px 0px 0px;
+      text-decoration: none;
+      -webkit-border-bottom-right-radius: 0px;
+      -webkit-border-bottom-left-radius: 0px;
+      -moz-border-radius-bottomright: 0px;
+      -moz-border-radius-bottomleft: 0px;
+      border-bottom-right-radius: 0px;
+      border-bottom-left-radius: 0px;
+      border: 1px solid white;
+      border-bottom: none;
+    }
+    
+    #topbar a {
+      color: #E9EAEE;
+      background: rgba(0,0,0,0.2);
+      padding: 4px 7px;
+      -webkit-border-radius: 10px;
+      -moz-border-radius: 10px;
+      border-radius: 10px;
+      margin: 20px 20px 0 0;
+      font-size: 14px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="wrapper">
+    <h1>KnightFinder</h1>
+    <h2>It's on the way...</h2>
+  </div>
+  <div id="topbar">
+    <a href="#" id="signin-link">Sign In</a>
+  </div>
+  <form action="/login" method="post" id="signin-form">
+    <label for="username">Email &nbsp;</label>
+    <input type="text" name="username" />
+    <label for="password">Password &nbsp;</label>
+    <input type="password" name="password"  />
+    <input type="submit" value="Sign In" name="submit" class="btn primary submit" />
+  </form>
+</body>

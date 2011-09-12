@@ -84,7 +84,7 @@ class KnightFinder < Sinatra::Base
   get "/" do
     #redirect "/login"
     puts "The DateTime, According to this ruby app is: #{Time.now}"
-    erb :index
+    erb :index, layout: false
   end
 
   get "/login" do
@@ -94,6 +94,8 @@ class KnightFinder < Sinatra::Base
   end
 
   post "/login" do
+    @venues = Venue.all #Remove when Live
+    erb :login
     #Log User in and redirect to view, based on attached venue_id
     #Post data must contain login credentials
   end
@@ -187,18 +189,6 @@ class KnightFinder < Sinatra::Base
 
   ################## DEALS WEB INTERFACE ###################
 
-  get "/:id/deals" do
-    # TODO: Build Deals List Page or JSON (Fox AJAX)
-    @venue = Venue.find_by_id(params[:id])
-    @deals = @venue.deals
-    erb :show_deals
-  end
-  
-  get "/:id/deals/:id/edit" do
-    # TODO: Build Edit Deals Page (or use partial somewehere else and scrap this route)
-    "Render List of Deals for Venue #{params[:id]}"
-  end
-
   post "/:venue_id/deals" do
     puts "CREATING DEAL FOR #{params[:id]}..."
     # Remove method and submit attributes from the hash so update_attributes can process it.
@@ -213,10 +203,11 @@ class KnightFinder < Sinatra::Base
   put "/:venue_id/deals/:id" do
     @deal = Deal.find_by_id(params[:id])
     params.delete("_method")
-    params.delete("Submit")
-    
-    @deal.update_attributes!(params)
-    redirect "/#{params[:venue_id]}"
+    params.delete("id")
+    puts "Firing Edit Record"
+    puts(params[:summary])
+    #@deal.update_attributes!(params)
+    return @deal.to_json
   end
   
   delete "/:venue_id/deals/:id" do
@@ -236,8 +227,7 @@ class KnightFinder < Sinatra::Base
     status 200
     puts "Waited for #{x} seconds... OK"
     "Waited for #{x} seconds"
-  end
-  
+  end  
   
   ################## WEB SERVICE API ###################
   

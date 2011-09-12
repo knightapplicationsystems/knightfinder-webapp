@@ -1,45 +1,64 @@
-<h1><%= @venue.name %></h1>
-<h2>Edit Details</h2>
+<header>
+  <h1><%= @venue.name %></h1>
+</header>
 
-<form class="row" action="/<%= @venue.id %>" method="post" accept-charset="utf-8">
-  <input name="_method" value="put" type="hidden"/>
-  <div class="span8">
-    <div class="clearfix"><label for="name">Venue Name: </label>    <div class="input"><input placeholder="Your Venue" name="name" value="<%= @venue.name %>"><br/></div></div>
-    <div class="clearfix"><label for="address1">Address: </label>   <div class="input"><input name="address1" value="<%= @venue.address1 %>"><br/></div>
-                                                                    <div class="input"><input name="address2" value="<%= @venue.address2 %>"><br/></div>
-                                                                    <div class="input"><input name="address3" value="<%= @venue.address3 %>"><br/></div></div>
-    <div class="clearfix"><label for="postcode">Postcode: </label>  <div class="input"><input placeholder="AB12 3CD" name="postcode" value="<%= @venue.postcode %>"><br/></div></div>
-    <div class="clearfix"><label for="phone">Phone: </label>        <div class="input"><input placeholder="01234 567 890" name="phone" value="<%= @venue.phone %>"><br/></div></div>
-  </div>
-  <div class="span8">
-    <div class="clearfix"><label for="email">Email: </label>        <div class="input"><input placeholder="example@example.com" name="email" type="email" value="<%= @venue.email %>"><br/></div></div>
-    <div class="clearfix"><label for="url">Website: </label>        <div class="input"><input placeholder="http://example.com" name="url" type="url" value="<%= @venue.url %>"><br/></div></div>
-    <div class="clearfix"><label for="longitude">Long: </label>     <div class="input"><input name="longitude" value="<%= @venue.longitude %>"><br/></div></div>
-    <div class="clearfix"><label for="latitude">Lat: </label>       <div class="input"><input name="latitude" value="<%= @venue.latitude %>"><br/></div></div>
-    <div class="clearfix"><label for="name">Active: </label>        <div class="input"><input name="active" type="checkbox"  value="active" <%= "checked" if @venue.active? %>><br/></div></div>
-  </div>
+
+<div class="details-form">
+  <h2>Venue Details</h2>
   
-  <div class="row">
-    <div class="actions">
-      <input type="submit" class="btn primary" value="Save Changes">
-      &nbsp;<input type="reset" class="btn" value="Cancel">
-      &nbsp;<input type="button" class="btn danger" value="Delete Venue" disabled >
-    </div>
-  </div>                                         
-</form>
+  <form action="/<%= @venue.id %>" method="post" accept-charset="utf-8">
+    
+    <div class="row">
+      <div class="span8">
+        <input name="_method" value="put" type="hidden"/>
+        <div class="clearfix"><label for="name">Venue Name: </label>    <div class="input"><input placeholder="Your Venue" name="name" value="<%= @venue.name %>"><br/></div></div>
+        <div class="clearfix"><label for="address1">Address: </label>   <div class="input"><input name="address1" value="<%= @venue.address1 %>"><br/></div>
+                                                                        <div class="input"><input name="address2" value="<%= @venue.address2 %>"><br/></div>
+                                                                        <div class="input"><input name="address3" value="<%= @venue.address3 %>"><br/></div></div>
+        <div class="clearfix"><label for="postcode">Postcode: </label>  <div class="input"><input placeholder="AB12 3CD" name="postcode" value="<%= @venue.postcode %>"><br/></div></div>
+        <div class="clearfix"><label for="phone">Phone: </label>        <div class="input"><input placeholder="01234 567 890" name="phone" value="<%= @venue.phone %>"><br/></div></div>
+      </div>
+      
+      <div class="span7">
+        <div class="clearfix"><label for="email">Email: </label>        <div class="input"><input placeholder="example@example.com" name="email" type="email" value="<%= @venue.email %>"><br/></div></div>
+        <div class="clearfix"><label for="url">Website: </label>        <div class="input"><input placeholder="http://example.com" name="url" type="url" value="<%= @venue.url %>"><br/></div></div>
+        <div class="clearfix"><label for="longitude">Long: </label>     <div class="input"><input name="longitude" value="<%= @venue.longitude %>" disabled ><br/></div></div>
+        <div class="clearfix"><label for="latitude">Lat: </label>       <div class="input"><input name="latitude" value="<%= @venue.latitude %>" disabled ><br/></div></div>
+        <div class="clearfix"><p>This venue is <%= "not " unless @venue.active? %>active. Please <a href="mailto:info@knightfinderapp.com?subject=User%20Support">contact support</a> if you'd like to change the latitude &amp; longitude of your venue.</p></div>
+      </div>
+      
+    </div><!-- row -->
+    
+    <div class="row">
+      
+      <div class="span16">
+        <div class="actions">
+          <input type="submit" class="btn primary" value="Save Changes">
+          &nbsp;<input type="reset" class="btn" value="Cancel">
+          &nbsp;<input type="button" class="btn danger" value="Delete Venue" disabled >
+        </div>
+      </div>
+      
+    </div><!-- row -->
+    
+  </form>
+</div>
 
+<div class="row">
+  <div class="span16">
+    <div id="register-venue" class="details-form">
+      <h2>Administration Details</h2>
+      <form action="/<%= @venue.id %>/registration" method="post" accept-charset="utf-8">
+        <div class="clearfix"><input name="_method" value="put" type="hidden"/></div>
+        <div class="clearfix"><label for="email">Login Email: </label>    <div class="input"><input placeholder="admin@example.com" name="login_email" type="login_email" value="<%= @venue.login_email if  @venue.login_email? %>"><br/></div></div>
+        <div class="clearfix"><label for="url">Change Password: </label>  <div class="input"><input name="password" type="password" value=""><br/></div></div>
 
-<h2>Register this Venue</h2>
-<form action="/<%= @venue.id %>/registration" method="post" accept-charset="utf-8">
-  <input name="_method" value="put" type="hidden"/>
-  <div class="clearfix"><label for="email">Login Email: </label>  <div class="input"><input placeholder="admin@example.com" name="login_email" type="login_email" value="<%= @venue.login_email %>"><br/></div></div>
-  <div class="clearfix"><label for="url">Password: </label>       <div class="input"><input name="password" type="password" value=""><br/></div></div>
-  
-  <div class="row">
-    <div class="actions">
-     <input type="submit" class="btn primary" name="Submit" value="Save Changes"><br/>
+        <div class="actions">
+         <input type="submit" class="btn primary" name="Submit" value="Save Changes"><br/>
+        </div>
+      </form>
     </div>
   </div>
-</form>
+</div>
 
 
