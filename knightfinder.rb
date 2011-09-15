@@ -148,6 +148,7 @@ class KnightFinder < Sinatra::Base
   
   get "/findlatlong" do
     puts "Firing"
+    puts params[:address]
     "firing"
     #puts params[address]
     

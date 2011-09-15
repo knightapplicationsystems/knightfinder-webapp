@@ -3,7 +3,7 @@
 </header>
 
 
-<div class="details-form">
+<div class="details-form" id="edit-details-details-form">
   <h2>Venue Details</h2>
   
   <form action="/<%= @venue.id %>" method="post" accept-charset="utf-8">
@@ -30,7 +30,6 @@
     </div><!-- row -->
     
     <div class="row">
-      
       <div class="span16">
         <div class="actions">
           <input type="submit" class="btn primary" value="Save Changes">
@@ -38,7 +37,6 @@
           &nbsp;<input type="button" class="btn danger" value="Delete Venue" disabled >
         </div>
       </div>
-      
     </div><!-- row -->
     
   </form>
