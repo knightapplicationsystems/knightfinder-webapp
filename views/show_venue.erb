@@ -13,19 +13,28 @@
 <div id="venue-details" class="row vcard">
   <div class="span7">
     <div id="venue-contact">
-      <a href="<%= @venue.id d%>/edit">Edit</a>
-  
+      <div class="admin">
+        <a class="edit-link" href="<%= @venue.id %>/edit">edit</a>
+      </div>
+      <h3>Venue Details</h3>
       <address class="fn address">
-        <%= @venue.address1 %><br/>
-        <%= @venue.address2 %><br/>
-        <%= @venue.address3 %><br/>
+        <%= @venue.address1 + "<br>" unless (@venue.address1.nil? || @venue.address1.empty?) %>
+        <%= @venue.address2 + "<br>" unless (@venue.address2.nil? || @venue.address2.empty?)%>
+        <%= @venue.address3 + "<br>" unless (@venue.address3.nil? || @venue.address3.empty?)%>
+        <%= @venue.city %><br/>
         <%= @venue.postcode %><br/>
       </address>
   
-      <a href="tel:<%= @venue.phone %>" class="fn tel"><%= @venue.phone %><br/>
-      <a href="mailto:<%= @venue.email %>" class="fn email"><%= @venue.email %><br/>
-      <a href="<%= @venue.url %>" class="fn url"><%= @venue.url %><br/>
-      <a href="http://maps.google.co.uk/?ll=<%= @venue.latitude %>,<%= @venue.longitude %>" class="longlat">long: <%= @venue.longitude %> / lat: <%= @venue.latitude %></a>
+      <% unless @venue.phone.nil? || @venue.phone.empty? %>
+        <a href="tel:<%= @venue.phone %>" class="fn tel"><%= @venue.phone %><br/>
+      <% end %>
+      <% unless @venue.email.nil? || @venue.email.empty? %>
+        <a href="mailto:<%= @venue.email %>" class="fn email"><%= @venue.email %><br/>
+      <% end %>
+      <% unless @venue.url.nil? || @venue.url.empty? %>
+        <a href="<%= @venue.url %>" class="fn url"><%= @venue.url %><br/>
+      <% end %>
+      <a href="http://maps.google.co.uk/?ll=<%= @venue.latitude %>,<%= @venue.longitude %>" class="latlong"><%= @venue.longitude %> / <%= @venue.latitude %></a>
     </div>
   </div>
   <div class="span9">
