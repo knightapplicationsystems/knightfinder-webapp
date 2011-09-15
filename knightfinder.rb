@@ -144,7 +144,15 @@ class KnightFinder < Sinatra::Base
       status 500
       "Venue Not Created"
     end
+  end
+  
+  get "/findlatlong" do
+    puts "Firing"
+    "firing"
+    #puts params[address]
     
+    #@location = Geokit::Geocoders::GoogleGeocoder.geocode(params[:address])
+    #return @location.ll
   end
 
   delete "/:id" do

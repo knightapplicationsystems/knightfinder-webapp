@@ -78,4 +78,16 @@ $(function() {
   $("time").timeago();
   
   
+  
+  ///////////////// Get Lat/Long on CREATE VENUE PAGE ///////////////////
+  
+  $("#get-ll").click(function(e) {
+    //e.preventDefault();
+    params = $("input[name=address1]").val() + ", " + $("input[name=address2]").val() + ", " + $("input[name=address3]").val() + ", " + $("input[name=city]").val() + ", " + $("input[name=postcode]").val();
+    var dataString = 'address='+ escape(params);
+    alert(dataString);
+    $.get("/findlatlong", dataString, function(data) {
+      alert(data);
+    });
+  });
 });
