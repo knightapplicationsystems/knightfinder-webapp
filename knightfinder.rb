@@ -7,6 +7,8 @@ require 'geokit'
 require 'digest/md5'
 require 'pony'
 
+ENV["IPHONE_APP_VERSION"] = "2.0.2"
+
 
 ####################### MODELS #######################
 
@@ -242,6 +244,12 @@ class KnightFinder < Sinatra::Base
   
   ################## WEB SERVICE API ###################
   
+  
+  # Lists the current app version.
+  
+  get "/api/appversion" do
+    return ENV["IPHONE_APP_VERSION"]
+  end
   
   # Expects "/api/venues?q=City" or "/api/venues?loc=45.6456677,0.567765&limit=50". Will fail with 400 on anything else.
   # ENSURE: Latitude then Londitude!
