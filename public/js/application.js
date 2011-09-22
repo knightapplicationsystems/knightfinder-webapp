@@ -14,7 +14,7 @@ $(function() {
     $('#signin-link').removeClass('hover');
   });
   
-  //////////////// EDIT VENUE /////////////////
+  //////////////// EDIT Deal /////////////////
   
   $(".edit-deal-link").click(function(e) {
     e.preventDefault();
@@ -69,6 +69,15 @@ $(function() {
     $(row_id_str + " input, " + row_id_str + " textarea").attr('disabled', false);
     
   });
+  
+  
+  //////////////// Add Deal /////////////////////
+  
+  $(".add-deal-link").click(function(e) {
+    e.preventDefault();
+    $("#add-deal-row").show();
+  });
+  
   
   
   

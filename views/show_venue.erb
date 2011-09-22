@@ -108,6 +108,17 @@
               </form>
             </tr>
           <% end %>
+          <tr id="new-deal-row">
+            <form action="/<%= @venue.id %>/deals" method="post" accept-charset="utf-8">
+              <td class="deal-id"></td>
+              <td><input name="summary" value="" placeholder="Summary" maxlength="40"></td>
+              <td><input name="expires" value="" placeholder="Export Date"></td>
+              <td><input type="checkbox" name="active" %></td>
+              <td><img src="/images/cross.png"></td>
+              <td><textarea name="details" placeholder="Details..."></textarea></td>
+              <td><input type="submit" id="#submit-new"class="btn primary small save-deal-btn" name="Submit" value="Add"></td>
+            </form>
+          </tr>
         </tbody>
         <tfoot>
           <tr>

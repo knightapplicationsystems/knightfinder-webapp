@@ -206,7 +206,8 @@ class KnightFinder < Sinatra::Base
     
     @deal = Venue.find_by_id(params[:venue_id]).deals.new(params)
     if @deal.save
-      redirect "/#{params[:venue_id]}"
+      return @deal.to_json;
+      #Return HTML partial (_new_deal.erb), populated with @deal.
     end
   end
 

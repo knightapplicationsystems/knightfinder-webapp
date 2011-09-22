@@ -165,21 +165,24 @@ h1 {
 
 
 
-.edit-deal-row {
+.edit-deal-row, #new-deal-row {
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
   padding: 0;
   background-color: #d1eed1;
   border-color: #bfe7bf;
-  display: none;
+  /*display: none;*/
 }
 
-.edit-deal-row td {
+.edit-deal-row td, #new-deal-row td {
   vertical-align: top;
 }
 
-.edit-deal-row .btn {
+.edit-deal-row .btn, #new-deal-row .btn {
   width: 50px;
 }
+
+//////////////////
+
 
 
 
