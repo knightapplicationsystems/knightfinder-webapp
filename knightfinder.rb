@@ -251,7 +251,7 @@ class KnightFinder < Sinatra::Base
     return ENV["IPHONE_APP_VERSION"]
   end
   
-  # Expects "/api/venues?q=City" or "/api/venues?loc=45.6456677,0.567765&limit=50". Will fail with 400 on anything else.
+  # Expects "/api/venues?q=City" or "/api/venues?loc=50.82742,-0.16647&limit=50". Will fail with 400 on anything else.
   # ENSURE: Latitude then Londitude!
   
   get "/api/venues" do
@@ -303,9 +303,31 @@ class KnightFinder < Sinatra::Base
       #   @venues << venue if geocoded_venue.distance_to(@current_location) < params[:limit].to_f
       # end
       
+      has_no_priority = []
+      has_priority = []
+      
+      
+      
+      @venues.each do |venue|
+        if (venue.priority != 0)
+          has_priority << venue
+        else
+          has_no_priority << venue
+        end
+      end
+      
+      
       # Sort Venues by Priority
-      @venues.sort! { |a,b| b.priority <=> a.priority }
+      has_priority.sort! { |a,b| a.priority <=> b.priority }
 
+      # Print to console
+      puts "----------PRIORITY-----------\n\n"
+      puts "Has No Priority: #{has_no_priority.count}"
+      puts "Has Priority: #{has_priority.count}\n"
+      has_priority.each {|v| puts "\t #{v.priority}\t #{v.name}" }
+      
+      @venues = has_priority + has_no_priority
+            
       # Return JSONified array or 404.
       if @venues.length > 0
         status 200
