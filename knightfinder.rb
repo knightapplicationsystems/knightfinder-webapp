@@ -73,12 +73,20 @@ end
 ####################### APPLICATION #######################
 
 class KnightFinder < Sinatra::Base
-  
+    
   configure do
     Geokit::Geocoders::google = 'ABQIAAAA3u5SpqaF2DYRIsPQ7SUS7hTtwS2snXC5p7JJaiv_N14kY4e6ixTzc_jYNIKYYCenoUoNg0PNmLBWvg'
     set :method_override, true
     set :root, File.dirname(__FILE__)
     set :public, Proc.new { File.join(root, "public") }
+  end
+  
+  helpers do
+    def partial(template,locals=nil)
+      locals = locals.is_a?(Hash) ? locals : {template.to_sym => locals}
+      template=('_' + template.to_s).to_sym
+      erb(template,{:layout => false},locals)      
+    end
   end
   
   ################## GENERAL WEB INTERFACE ###################
@@ -105,13 +113,17 @@ class KnightFinder < Sinatra::Base
 
   ################## VENUES WEB INTERFACE ###################
   
-  get "/new" do
-    erb :create_venue
+  get "/findlatlong" do
+    puts "--------------------- FIRING --------------------"
+    
+    puts params[:address]
+    
+    @location = Geokit::Geocoders::GoogleGeocoder.geocode(params[:address])
+    return @location.ll
   end
   
-  get "/:id" do
-    @venue = Venue.find_by_id(params[:id])
-    erb :show_venue
+  get "/new" do
+    erb :create_venue
   end
 
   get "/:id/edit" do
@@ -138,6 +150,7 @@ class KnightFinder < Sinatra::Base
     params.delete("Submit")
     
     @venue = Venue.new(params)
+    @venue.active = true
     if @venue.save
       puts "...DONE"
       redirect @venue.id
@@ -146,16 +159,6 @@ class KnightFinder < Sinatra::Base
       status 500
       "Venue Not Created"
     end
-  end
-  
-  get "/findlatlong" do
-    puts "Firing"
-    puts params[:address]
-    "firing"
-    #puts params[address]
-    
-    #@location = Geokit::Geocoders::GoogleGeocoder.geocode(params[:address])
-    #return @location.ll
   end
 
   delete "/:id" do
@@ -198,19 +201,26 @@ class KnightFinder < Sinatra::Base
     end
     
   end
+  
+  get "/:id" do
+    @venue = Venue.find_by_id(params[:id])
+    erb :show_venue
+  end
 
   ################## DEALS WEB INTERFACE ###################
 
   post "/:venue_id/deals" do
     puts "CREATING DEAL FOR #{params[:id]}..."
-    # Remove method and submit attributes from the hash so update_attributes can process it.
+    # Remove submit attributes from the hash so new() can process it.
     params.delete("Submit")
     
     @deal = Venue.find_by_id(params[:venue_id]).deals.new(params)
+    
     if @deal.save
-      return @deal.to_json;
+      erb :_deal_row, layout: false
       #Return HTML partial (_new_deal.erb), populated with @deal.
     end
+    
   end
 
   put "/:venue_id/deals/:id" do
@@ -219,7 +229,7 @@ class KnightFinder < Sinatra::Base
     params.delete("id")
     puts "Firing Edit Record"
     puts(params[:summary])
-    #@deal.update_attributes!(params)
+    @deal.update_attributes!(params)
     return @deal.to_json
   end
   

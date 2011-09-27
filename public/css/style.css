@@ -170,7 +170,7 @@ h1 {
   padding: 0;
   background-color: #d1eed1;
   border-color: #bfe7bf;
-  /*display: none;*/
+  display: none;
 }
 
 .edit-deal-row td, #new-deal-row td {
@@ -180,12 +180,6 @@ h1 {
 .edit-deal-row .btn, #new-deal-row .btn {
   width: 50px;
 }
-
-//////////////////
-
-
-
-
 
 
 

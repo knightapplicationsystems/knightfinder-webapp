@@ -16,7 +16,7 @@ $(function() {
   
   //////////////// EDIT Deal /////////////////
   
-  $(".edit-deal-link").click(function(e) {
+  $(".edit-deal-link").live('click', function(e) {
     e.preventDefault();
     $(this).closest("tr.deal-row").hide();
     $($(this).attr("href")).show();
@@ -25,7 +25,7 @@ $(function() {
   
   
   
-  $(".save-deal-btn").click(function(e) {
+  $(".save-deal-btn").live('click', function(e) {
     e.preventDefault();
     var active = false;
     var row_id = $(this).attr('id').split("-")[1];
@@ -38,9 +38,7 @@ $(function() {
     var active  = $(row_id_str + " input[name='active']").is(':checked') ? true : false;
     var featured = false;
     var details = escape($(row_id_str + " textarea[name='details']").val());
-    
-    alert(summary);
-    
+        
     // Do AJAX Post
     var dataString = 'id='+ row_id + '&_method=put&summary=' + summary + '&expires=' + expires + '&active=' + active + '&details=' + details; 
     var url = $(row_id_str + " form").attr('action');
@@ -73,11 +71,40 @@ $(function() {
   
   //////////////// Add Deal /////////////////////
   
-  $(".add-deal-link").click(function(e) {
-    e.preventDefault();
-    $("#add-deal-row").show();
+  $("#add-deal-link").click(function() {
+    $("#new-deal-row").show();
+    $(this).hide();
+    return false;
   });
   
+  $("#new-deal-row form").submit(function(e) {
+    e.preventDefault();
+    var active = false;
+
+    $("#new-deal-row input, #new-deal-row textarea").attr('disabled', true);
+    
+    var summary = escape($("#new-deal-row input[name='summary']").val());
+    var expires = $("#new-deal-row input[name='expires']").val();
+    var active  = $("#new-deal-row input[name='active']").is(':checked') ? true : false;
+    var featured = false;
+    var details = escape($("#new-deal-row textarea[name='details']").val());
+
+    // Do AJAX Post
+    var dataString = '&summary=' + summary + '&expires=' + expires + '&active=' + active + '&details=' + details; 
+    var url = $("#new-deal-row form").attr('action');
+
+    //Update the View with the new Data
+    $("#add-deal-link").show();
+    $("#add-deal-link-container").append(" <em>Saving...</em>");
+
+    $.post(url, dataString, function(data) {
+      $("#add-deal-link-container em").remove();
+      $('#deals table > tbody:last').append(data);
+      $("#new-deal-row").hide();
+      $("#new-deal-row input, #new-deal-row textarea").attr('disabled', false);
+      $("#new-deal-row input[name='expires'], #new-deal-row input[name='summary'], #new-deal-row textarea").val(""); 
+    })
+  });
   
   
   
@@ -91,10 +118,17 @@ $(function() {
   ///////////////// Get Lat/Long on CREATE VENUE PAGE ///////////////////
   
   $("#get-ll").click(function() {
-    params = $("input[name=address1]").val() + ", " + $("input[name=address2]").val() + ", " + $("input[name=address3]").val() + ", " + $("input[name=city]").val() + ", " + $("input[name=postcode]").val();
-    alert("/findlatlong?address=" + escape(params));
+    params = $("input[name=address1]").val()
+    if ($("input[name=address2]").val() != "") {params = params + ", " + $("input[name=address2]").val();}
+    if ($("input[name=address3]").val() != "") {params = params + ", " + $("input[name=address3]").val();}
+    if ($("input[name=city]").val() != "") {params = params + ", " + $("input[name=city]").val();}
+    if ($("input[name=postcode]").val() != "") {params = params + ", " + $("input[name=postcode]").val();}
+    
+    //alert("/findlatlong?address=" + escape(params));
     $.get("/findlatlong?address=" + escape(params), function(data) {
-      alert(data);
+      a = data.split(",");
+      $("input[name=latitude]").val(a[0]);
+      $("input[name=longitude]").val(a[1]);
     });
   });
 });

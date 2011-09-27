@@ -1,0 +1,22 @@
+<tr class="deal-row" id="deal-row-<%= @deal.id %>">
+  <td class="deal-id"><%= @deal.id %></td>
+  <td class="deal-summary"><%= @deal.summary %></td>
+  <td class="deal-expires"><time datetime="<%= @deal.expires %>"><%= @deal.expires %></time></td>
+  <td class="deal-active"><img src="/images/<%= @deal.active ? 'tick' : 'cross' %>.png"></td>
+  <td class="deal-featured"><img src="/images/<%= @deal.featured ? 'tick' : 'cross' %>.png"></td>
+  <td class="deal-details"><%= @deal.details %></td>
+  <td class="deal-edit"><a class="edit-deal-link" href="#edit-deal-row-<%= @deal.id %>"><img src="/images/pencil.png" alt="Edit" /></td>
+</tr>
+
+<tr class="edit-deal-row" id="edit-deal-row-<%= @deal.id %>">
+  <form action="/<%= @deal.venue_id %>/deals/<%= @deal.id %>" method="post" accept-charset="utf-8">
+    <input type="hidden" name="_method" value="put">
+    <td class="deal-id"><%= @deal.id %></td>
+    <td><input name="summary" value="<%= @deal.summary %>" maxlength="40"></td>
+    <td><input name="expires" value="<%= @deal.expires %>"></td>
+    <td><input type="checkbox" name="active" <%= @deal.active ? 'checked' : '' %>></td>
+    <td><img src="/images/<%= @deal.featured ? 'tick' : 'cross' %>.png"></td>
+    <td><textarea name="details"><%= @deal.details %></textarea></td>
+    <td><input type="submit" id="#submit-<%= @deal.id %>"class="btn primary small save-deal-btn" name="Submit" value="Save"></td>
+  </form>
+</tr>
