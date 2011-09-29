@@ -29,7 +29,11 @@
           <h3><a href="/">KnightFinder</a></h3>
           <ul>
             <li class="active"><a href="#">Dashboard</a></li>
-            <li><a href="/new">New Venue</a></li>
+            <% if session[:admin ] %>
+              <li><a href="/new">New Venue</a></li>
+              <li><a href="/list">List Venues</a></li>
+            <% end %>
+            <li><a href="/logout">Sign Out</a></li>
           </ul>
         </div>
       </div><!-- /fill -->
@@ -41,7 +45,7 @@
       </div>
     </div>
     <footer>
-      <p> &copy; Copyright 2011 KnightFinder. All Rights Reserved.</p>
+      <p> &copy; Copyright 2011 KnightFinder. All Rights Reserved. Logged in as <%= "Venue ID #{session[:venue_id]}" %><%= "Administrator" if session[:admin] %></p>
     </footer>
   </body>
 </html>
