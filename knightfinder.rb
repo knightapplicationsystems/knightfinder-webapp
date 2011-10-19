@@ -4,8 +4,8 @@ require 'bundler/setup'
 require 'sinatra/activerecord'
 require 'json'
 require 'geokit'
-require 'digest/md5'
 require 'pony'
+require 'iconv'
 
 ENV["IPHONE_APP_VERSION"] = "2.0.2"
 
@@ -342,9 +342,12 @@ class KnightFinder < Sinatra::Base
       #Check Session
       if session[:venue_id] == nil
        #If there's no session (ie. no login)
+       puts session.inspect
+       puts "No Venue ID"
        redirect "/"
       elsif (not session[:admin]) && (not request.env['REQUEST_PATH'] =~ /\/#{session[:venue_id]}(|\/.*)/)
        #Unless you are an admin, redirect to your page
+       puts "User not Admin and trying to see another users page"
        redirect "/#{session[:venue_id]}"
       end
     end
@@ -365,6 +368,7 @@ class KnightFinder < Sinatra::Base
         if params[:password] == "Foobar6397"
           session[:admin] = true
           session[:venue_id] = "admin"
+          puts session.inspect
           redirect "/list"
         else
           erb :index, layout: false
@@ -495,6 +499,10 @@ class KnightFinder < Sinatra::Base
     puts "CREATING DEAL FOR #{params[:id]}..."
     # Remove submit attributes from the hash so new() can process it.
     params.delete("Submit")
+    ic = Iconv.new('UTF-8//IGNORE', 'UTF-8')
+    #Sanitize the editable fields of the deal for non UTF-8 characters.
+    params[:summary] =  ic.iconv(params[:summary])
+    params[:details] =  ic.iconv(params[:details])
     
     @deal = Venue.find_by_id(params[:venue_id]).deals.new(params)
     
@@ -510,7 +518,12 @@ class KnightFinder < Sinatra::Base
     params.delete("_method")
     params.delete("id")
     puts "Firing Edit Record"
-    puts(params[:summary])
+    
+    ic = Iconv.new('UTF-8//IGNORE', 'UTF-8')
+    #Sanitize the editable fields of the deal for non UTF-8 characters.
+    params[:summary] =  ic.iconv(params[:summary])
+    params[:details] =  ic.iconv(params[:details])
+    
     @deal.update_attributes!(params)
     return @deal.to_json
   end

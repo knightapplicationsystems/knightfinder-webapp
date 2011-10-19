@@ -2,7 +2,6 @@
   <h1><%= @venue.name %></h1>
 </header>
 
-
 <div class="details-form" id="edit-details-details-form">
   <h2>Venue Details</h2>
   
@@ -22,8 +21,8 @@
       <div class="span7">
         <div class="clearfix"><label for="email">Email: </label>        <div class="input"><input placeholder="example@example.com" name="email" type="email" value="<%= @venue.email %>"><br/></div></div>
         <div class="clearfix"><label for="url">Website: </label>        <div class="input"><input placeholder="http://example.com" name="url" type="url" value="<%= @venue.url %>"><br/></div></div>
-        <div class="clearfix"><label for="longitude">Long: </label>     <div class="input"><input name="longitude" value="<%= @venue.longitude %>" disabled ><br/></div></div>
-        <div class="clearfix"><label for="latitude">Lat: </label>       <div class="input"><input name="latitude" value="<%= @venue.latitude %>" disabled ><br/></div></div>
+        <div class="clearfix"><label for="longitude">Long: </label>     <div class="input"><input name="longitude" value="<%= @venue.longitude %>" <%= "disabled" unless session[:admin] %> ><br/></div></div>
+        <div class="clearfix"><label for="latitude">Lat: </label>       <div class="input"><input name="latitude" value="<%= @venue.latitude %>" <%= "disabled" unless session[:admin] %> ><br/></div></div>
         <div class="clearfix"><p>This venue is <%= "not " unless @venue.active? %>active. Please <a href="mailto:info@knightfinderapp.com?subject=User%20Support">contact support</a> if you'd like to change the latitude &amp; longitude of your venue.</p></div>
       </div>
       
